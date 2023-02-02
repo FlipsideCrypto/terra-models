@@ -1,4 +1,4 @@
-{% macro run_sp_create_prod_clone() %}
+{% macro run_sp_create_prod_community_clone() %}
     {% set clone_query %}
     call terra._internal.create_prod_clone(
         'terra',
