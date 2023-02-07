@@ -20,7 +20,7 @@ WITH labels AS (
         ) }}
     WHERE
         blockchain = 'terra'
-        AND address != 'flipside' 
+        and delete_flag is null
         
         qualify ROW_NUMBER() over (
             PARTITION BY address
