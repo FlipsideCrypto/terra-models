@@ -9,13 +9,13 @@ WITH labels AS (
         blockchain,
         address,
         creator,
-        l1_label AS label_type,
-        l2_label AS label_subtype,
+        label_type,
+        label_subtype,
         address_name AS label,
         project_name
     FROM
         {{ source(
-            'labels',
+            'labels_v2',
             'address_labels'
         ) }}
     WHERE
