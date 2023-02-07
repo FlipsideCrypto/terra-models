@@ -20,6 +20,13 @@ WITH labels AS (
         ) }}
     WHERE
         blockchain = 'terra'
+        AND address != 'flipside' 
+        
+        qualify ROW_NUMBER() over (
+            PARTITION BY address
+            ORDER BY
+                creator DESC
+        ) = 1
 ),
 tokens AS (
     SELECT
@@ -48,15 +55,15 @@ FINAL AS (
             l.creator
         ) AS creator,
         IFF(
-            l.label_type is not null,
+            l.label_type IS NOT NULL,
             l.label_type,
-            'token') AS label_type,
+            'token'
+        ) AS label_type,
         IFF(
-            l.label_subtype is not null,
-        l.label_subtype,
-        'token_contract'
-        ) as label_subtype
-        ,
+            l.label_subtype IS NOT NULL,
+            l.label_subtype,
+            'token_contract'
+        ) AS label_subtype,
         COALESCE(
             t.symbol,
             l.label
