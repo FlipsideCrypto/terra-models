@@ -131,3 +131,8 @@ sources:
     database: flipside_prod_db
     tables:
       - name: address_labels
+  - name: labels_v2
+    schema: silver
+    database: crosschain
+    tables:
+      - name: address_labels

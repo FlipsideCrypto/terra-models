@@ -9,17 +9,24 @@ WITH labels AS (
         blockchain,
         address,
         creator,
-        l1_label AS label_type,
-        l2_label AS label_subtype,
+        label_type,
+        label_subtype,
         address_name AS label,
         project_name
     FROM
         {{ source(
-            'labels',
+            'labels_v2',
             'address_labels'
         ) }}
     WHERE
         blockchain = 'terra'
+        and delete_flag is null
+        
+        qualify ROW_NUMBER() over (
+            PARTITION BY address
+            ORDER BY
+                creator DESC
+        ) = 1
 ),
 tokens AS (
     SELECT
@@ -48,15 +55,15 @@ FINAL AS (
             l.creator
         ) AS creator,
         IFF(
-            l.label_type is not null,
+            l.label_type IS NOT NULL,
             l.label_type,
-            'token') AS label_type,
+            'token'
+        ) AS label_type,
         IFF(
-            l.label_subtype is not null,
-        l.label_subtype,
-        'token_contract'
-        ) as label_subtype
-        ,
+            l.label_subtype IS NOT NULL,
+            l.label_subtype,
+            'token_contract'
+        ) AS label_subtype,
         COALESCE(
             t.symbol,
             l.label
