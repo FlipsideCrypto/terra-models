@@ -3,85 +3,15 @@
     secure = true
 ) }}
 
-WITH labels AS (
-
-    SELECT
-        blockchain,
-        address,
-        creator,
-        label_type,
-        label_subtype,
-        address_name AS label,
-        project_name
-    FROM
-        {{ source(
-            'labels_v2',
-            'address_labels'
-        ) }}
-    WHERE
-        blockchain = 'terra'
-        and delete_flag is null
-        
-        qualify ROW_NUMBER() over (
-            PARTITION BY address
-            ORDER BY
-                creator DESC
-        ) = 1
-),
-tokens AS (
-    SELECT
-        blockchain,
-        'token_deployment' AS creator,
-        tx_id,
-        label,
-        symbol,
-        address,
-        decimals
-    FROM
-        {{ ref('silver__token_labels') }}
-),
-FINAL AS (
-    SELECT
-        COALESCE(
-            t.blockchain,
-            l.blockchain
-        ) AS blockchain,
-        COALESCE(
-            t.address,
-            l.address
-        ) AS address,
-        COALESCE(
-            t.creator,
-            l.creator
-        ) AS creator,
-        IFF(
-            l.label_type IS NOT NULL,
-            l.label_type,
-            'token'
-        ) AS label_type,
-        IFF(
-            l.label_subtype IS NOT NULL,
-            l.label_subtype,
-            'token_contract'
-        ) AS label_subtype,
-        COALESCE(
-            t.symbol,
-            l.label
-        ) AS label,
-        COALESCE(
-            t.label,
-            l.project_name
-        ) AS project_name,
-        t.decimals,
-        t.tx_id AS deployment_tx_id
-    FROM
-        labels l full
-        JOIN tokens t USING (
-            blockchain,
-            address
-        )
-)
 SELECT
-    *
+    blockchain,
+    address,
+    creator,
+    label_type,
+    label_subtype,
+    label,
+    project_name,
+    decimals,
+    deployment_tx_id
 FROM
-    FINAL
+    {{ ref('silver__address_labels') }}
