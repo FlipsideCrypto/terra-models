@@ -16,5 +16,5 @@ dbt_docs.sh
 **/.DS_Store
 .vscode/ 
 
-.dbt/.user.yml
+.github/workflows/.dbt/.user.yml
 dbt-env/
