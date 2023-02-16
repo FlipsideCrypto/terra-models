@@ -1,6 +1,7 @@
 name: dbt_docs_update
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "main"
@@ -36,7 +37,7 @@ jobs:
 
       - name: install dependencies
         run: |
-          pip install dbt-snowflake==${{ secrets.DBT_VERSION }}
+          pip install dbt-snowflake==${{ vars.DBT_VERSION }}
           dbt deps
       - name: checkout docs branch
         run: |
