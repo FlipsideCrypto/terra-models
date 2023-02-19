@@ -136,9 +136,12 @@ final_table AS (
         contract_address AS pool_id
     FROM
         processed_swaps s
-        JOIN transactions t
+        INNER JOIN transactions t
         ON s.tx_id = t.tx_id
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY swap_id ORDER BY s.block_timestamp DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (
+        PARTITION BY swap_id 
+        ORDER BY s.block_timestamp DESC
+        ) = 1
 )
 
 SELECT
