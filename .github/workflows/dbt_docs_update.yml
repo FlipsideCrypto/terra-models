@@ -1,7 +1,6 @@
 name: dbt_docs_update
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - "main"
