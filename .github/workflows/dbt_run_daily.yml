@@ -1,10 +1,14 @@
-name: dbt_test_workflow
-run-name: dbt_test_workflow
+name: dbt_run_scheduled
+run-name: dbt_run_scheduled
 
 on:
   workflow_dispatch:
+  schedule:
+    # Runs 0700 daily (see https://crontab.guru) 
+    - cron: '0 7 * * *'
 
 env:
+  USE_VARS: "${{ vars.USE_VARS }}"
   DBT_PROFILES_DIR: "${{ vars.DBT_PROFILES_DIR }}"
   DBT_VERSION: "${{ vars.DBT_VERSION }}"
   ACCOUNT: "${{ vars.ACCOUNT }}"
@@ -21,7 +25,7 @@ concurrency:
 
 jobs:
   called_workflow_template:
-    uses: FlipsideCrypto/analytics-workflow-templates/.github/workflows/dbt_run_template.yml@alter_workflow_var
+    uses: FlipsideCrypto/analytics-workflow-templates/.github/workflows/dbt_run_template.yml@main
     with:
       dbt_command: >
         dbt seed; dbt run

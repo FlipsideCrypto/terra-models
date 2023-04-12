@@ -21,40 +21,33 @@ WITH base_blocks AS (
     FROM
         {{ ref('bronze__blocks') }}
     WHERE
-        {{ incremental_load_filter('_inserted_timestamp') }}
+        {{ incremental_last_x_days(
+            '_inserted_timestamp',
+            3
+        ) }}
         qualify ROW_NUMBER() over (
             PARTITION BY block_id
             ORDER BY
                 _inserted_timestamp DESC
         ) = 1
 ),
-validator_signatures AS (
-    SELECT
-        header :last_commit :height AS block_id,
-        header :last_commit :signatures AS signatures
-    FROM
-        base_blocks
-),
-validator_addresses AS (
-    SELECT
-        validator_signatures.block_id AS block_id,
-        s0.value :validator_address AS validator_address
-    FROM
-        validator_signatures,
-        LATERAL FLATTEN(
-            input => validator_signatures.signatures
-        ) AS s0
-),
 validators_address_array AS (
     SELECT
-        CAST(validator_addresses.block_id AS NUMBER(38, 0)) AS block_id,
-        ARRAY_AGG(
-            DISTINCT validator_addresses.validator_address
-        ) AS address_array
+        block_id,
+        validator_address_array,
+        _inserted_timestamp
     FROM
-        validator_addresses
-    GROUP BY
-        validator_addresses.block_id
+        {{ ref('silver__blocks_val_array') }}
+    WHERE
+        {{ incremental_last_x_days(
+            '_inserted_timestamp',
+            3
+        ) }}
+        qualify ROW_NUMBER() over (
+            PARTITION BY block_id
+            ORDER BY
+                _inserted_timestamp DESC
+        ) = 1
 ),
 FINAL AS (
     SELECT
@@ -77,7 +70,7 @@ FINAL AS (
         base_blocks.header :validators_hash :: STRING AS validators_hash,
         base_blocks._ingested_at AS _ingested_at,
         base_blocks._inserted_timestamp AS _inserted_timestamp,
-        validators_address_array.address_array :: ARRAY AS validator_address_array
+        validators_address_array.validator_address_array :: ARRAY AS validator_address_array
     FROM
         base_blocks
         LEFT JOIN validators_address_array

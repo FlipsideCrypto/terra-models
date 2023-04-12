@@ -9,6 +9,7 @@ models:
             - ACTION
             - MESSAGE_INDEX
             - DELEGATOR_ADDRESS
+            - VALIDATOR_ADDRESS
     columns:
       - name: ACTION
         description: "{{ doc('action') }}"
