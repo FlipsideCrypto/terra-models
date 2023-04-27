@@ -8,15 +8,14 @@
 WITH base_blocks AS (
 
     SELECT
-        record_id,
-        offset_id,
         block_id,
         block_timestamp,
         network,
         chain_id,
         tx_count,
         header,
-        _ingested_at,
+        last_commit,
+        evidence,
         _inserted_timestamp
     FROM
         {{ ref('bronze__blocks') }}
@@ -58,17 +57,20 @@ FINAL AS (
         base_blocks.header :chain_id :: STRING AS chain_id,
         base_blocks.header :consensus_hash :: STRING AS consensus_hash,
         base_blocks.header :data_hash :: STRING AS data_hash,
-        base_blocks.header :evidence AS evidence,
+        COALESCE(
+            base_blocks.header :evidence,
+            base_blocks.evidence
+        ) AS evidence,
         base_blocks.header :evidence_hash :: STRING AS evidence_hash,
         base_blocks.header :height :: INTEGER AS block_height,
         base_blocks.header :last_block_id AS last_block_id,
-        base_blocks.header :last_commit AS last_commit,
+        base_blocks.last_commit AS last_commit,
         base_blocks.header :last_commit_hash :: STRING AS last_commit_hash,
         base_blocks.header :last_results_hash :: STRING AS last_results_hash,
         base_blocks.header :next_validators_hash :: STRING AS next_validators_hash,
         base_blocks.header :proposer_address :: STRING AS proposer_address,
         base_blocks.header :validators_hash :: STRING AS validators_hash,
-        base_blocks._ingested_at AS _ingested_at,
+        base_blocks._inserted_timestamp AS _ingested_at,
         base_blocks._inserted_timestamp AS _inserted_timestamp,
         validators_address_array.validator_address_array :: ARRAY AS validator_address_array
     FROM
