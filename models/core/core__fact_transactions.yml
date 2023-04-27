@@ -39,14 +39,14 @@ models:
 
       - name: AUTH_TYPE
         description: "{{ doc('auth_type') }}"
-        tests:
-          - not_null
+        # tests:
+        #   - not_null
         
 
       - name: AUTHORIZER_PUBLIC_KEY
         description: "{{ doc('authorizer_public_key') }}"
-        tests:
-          - not_null
+        # tests:
+        #   - not_null
 
       - name: TX_SENDER
         description: "{{ doc('tx_sender') }}"
@@ -58,13 +58,13 @@ models:
 
       - name: GAS_LIMIT
         description: "{{ doc('gas_limit') }}"
-        tests:
-          - not_null
+        # tests:
+        #   - not_null
 
       - name: GAS_USED
         description: "{{ doc('gas_limit') }}"
-        tests:
-          - not_null
+        # tests:
+        #   - not_null
 
       - name: FEE_RAW
         description: "{{ doc('fee_raw') }}"

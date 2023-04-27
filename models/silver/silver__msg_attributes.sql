@@ -29,7 +29,9 @@ flatten_txs AS (
   FROM
     txs,
     LATERAL FLATTEN(
-      input => tx :tx_result :log
+      input => TRY_PARSE_JSON(
+        tx :tx_result :log
+      )
     )
 ),
 block_table AS (

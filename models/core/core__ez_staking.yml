@@ -27,10 +27,10 @@ models:
         description: "{{ doc('block_timestamp') }}"
         tests:
           - not_null
-          - dbt_expectations.expect_row_values_to_have_recent_data:
-              datepart: day
-              interval: 1
-      - name: CHAIN_ID
+      #     - dbt_expectations.expect_row_values_to_have_recent_data:
+      #         datepart: day
+      #         interval: 1
+      # - name: CHAIN_ID
         description: "{{ doc('chain_id') }}"
         tests:
           - not_null

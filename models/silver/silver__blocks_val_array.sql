@@ -9,6 +9,7 @@ WITH base_blocks AS (
 
     SELECT
         header,
+        last_commit,
         _inserted_timestamp
     FROM
         {{ ref('bronze__blocks') }}
@@ -30,6 +31,17 @@ validator_signatures AS (
         _inserted_timestamp
     FROM
         base_blocks
+    WHERE
+        block_id <= 4711778
+    UNION ALL
+    SELECT
+        last_commit :height AS block_id,
+        last_commit :signatures AS signatures,
+        _inserted_timestamp
+    FROM
+        base_blocks
+    WHERE
+        block_id > 4711778
 ),
 validator_addresses AS (
     SELECT

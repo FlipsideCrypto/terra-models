@@ -136,3 +136,10 @@ sources:
     database: crosschain
     tables:
       - name: address_labels
+  - name: bronze
+    schema: bronze
+    database: terra
+    tables:
+      - name: lq_blocks
+      - name: lq_txs
+
