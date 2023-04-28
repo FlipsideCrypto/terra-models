@@ -40,7 +40,15 @@ SELECT
     b.value :header :time :: datetime AS block_timestamp,
     'mainnet' AS network,
     'terra2' AS chain_id,
-    NULL AS tx_count,
+    COALESCE(
+        ARRAY_SIZE(
+            b.value :data :txs
+        ) :: NUMBER,
+        ARRAY_SIZE(
+            DATA :result :block :data :txs
+        ) :: NUMBER,
+        0
+    ) AS tx_count,
     b.value :header AS header,
     b.value :last_commit AS last_commit,
     b.value :evidence AS evidence,
