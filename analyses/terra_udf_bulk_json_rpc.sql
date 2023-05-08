@@ -8,9 +8,9 @@ SELECT
     streamline.udf_bulk_json_rpc(
         object_construct(
             'sql_source',
-            'view_name',
+            'streamline__pc_getBlock_realtime',
             'external_table',
-            'qn_getBlockWithReceipts',
+            'pc_getBlock',
             'sql_limit',
             4000,
             'producer_batch_size',
