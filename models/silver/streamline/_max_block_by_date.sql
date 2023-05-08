@@ -7,7 +7,7 @@ WITH base AS (
 
     SELECT
         block_timestamp :: DATE AS block_date,
-        MAX(block_id) block_id
+        MAX(block_height) block_id
     FROM
         {{ ref("silver__blocks") }}
     GROUP BY
