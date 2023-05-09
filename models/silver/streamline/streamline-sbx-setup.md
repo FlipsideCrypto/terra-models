@@ -41,7 +41,7 @@ CREATE ROLE AWS_LAMBDA_TERRA_API_SBX;
 
 CREATE USER AWS_LAMBDA_TERRA_API_SBX PASSWORD='abc123' DEFAULT_ROLE = AWS_LAMBDA_TERRA_API_SBX MUST_CHANGE_PASSWORD = TRUE;
 
-GRANT SELECT ON ALL TABLES IN SCHEMA TERRA_DEV.STREAMLINE TO ROLE AWS_LAMBDA_TERRA_API_SBX;
+GRANT SELECT ON ALL VIEWS IN SCHEMA TERRA_DEV.STREAMLINE TO ROLE AWS_LAMBDA_TERRA_API_SBX;
 
 ALTER USER AWS_LAMBDA_TERRA_API_SBX SET ROLE AWS_LAMBDA_TERRA_API_SBX;
 
@@ -50,16 +50,32 @@ ALTER USER AWS_LAMBDA_TERRA_API SET PASSWORD = 'new_password';
 ```
 ### Register Snowflake integration and UDF's
 
-- Register the ![snowflake integration](/macros/streamline/api_integrations.sql)
+- Register the ![snowflake api integration](/macros/streamline/api_integrations.sql)
+
+```sql
+-- Manually run on snowflake
+CREATE api integration IF NOT EXISTS aws_terra_api_sbx_shah api_provider = aws_api_gateway api_aws_role_arn = 'arn:aws:iam::579011195466:role/snowflake-api-terra' api_allowed_prefixes = (
+    'https://33fgv8p4d4.execute-api.us-east-1.amazonaws.com/sbx/'
+) enabled = TRUE;
+```
 
 ```zsh
+# Use dbt to run create_aws_terra_api macro
 dbt run-operation create_aws_terra_api --target dev
 ```
 
-- Add the udf to the ![create udfs macro](./macros/create_udfs.sql)
+- Add the UDF to the ![create udfs macro](./macros/create_udfs.sql)
+- Register UDF
 
-- Invoke the udf
+```sql
+CREATE
+OR REPLACE EXTERNAL FUNCTION streamline.udf_bulk_json_rpc(json variant) returns text api_integration = aws_terra_api_sbx_shah AS 'https://33fgv8p4d4.execute-api.us-east-1.amazonaws.com/sbx/udf_bulk_json_rpc';
+```
+
+- Add the ![_max_block_by_date.sql](_max_block_by_date.sql) model
+- Add the ![streamline__blocks](streamline__blocks.sql) model
+- Add the ![get_base_table_udft.sql](../../../macros/streamline/get_base_table_udft.sql) macro
 
 ```zsh
-dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True, "STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES": True}' -m 1+models/silver/streamline/core/realtime/streamline__pc_getBlock_realtime.sql --profile terra --target sbx   
+dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True, "STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES": True}' -m 1+models/silver/streamline/core/realtime/streamline__pc_getBlock_realtime.sql --profile terra --target sbx --profiles-dir ~/.dbt
 ```

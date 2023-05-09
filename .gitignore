@@ -18,3 +18,5 @@ dbt_docs.sh
 
 .github/workflows/.dbt/.user.yml
 dbt-env/
+
+*.user.yml
