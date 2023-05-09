@@ -22,16 +22,18 @@ INSERT INTO
                             DISTINCT block_number
                         FROM
                             bronze.lq_blocks
+                        WHERE
+                            block_number IS NOT NULL
                         EXCEPT
                         SELECT
                             DISTINCT block_number
                         FROM
                             bronze.lq_txs A
+                        ORDER BY
+                            1 DESC
                         LIMIT
                             1000
                     )
-                ORDER BY
-                    1
             )
         GROUP BY
             grp
@@ -44,6 +46,8 @@ INSERT INTO
             ) DATA
         FROM
             calls
+        WHERE
+            calls [0] :id IS NOT NULL
     )
 SELECT
     NULL AS VALUE,
