@@ -28,7 +28,7 @@ INSERT INTO
                         FROM
                             bronze.lq_txs A
                         ORDER BY
-                            1
+                            1 DESC
                         LIMIT
                             1000
                     )
