@@ -64,11 +64,11 @@ INSERT INTO
                             DISTINCT block_number
                         FROM
                             bronze.lq_blocks A
+                        ORDER BY
+                            1 DESC
                         LIMIT
                             1000
                     )
-                ORDER BY
-                    1
             )
         GROUP BY
             grp

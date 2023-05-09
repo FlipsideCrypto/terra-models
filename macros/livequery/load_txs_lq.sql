@@ -27,11 +27,11 @@ INSERT INTO
                             DISTINCT block_number
                         FROM
                             bronze.lq_txs A
+                        ORDER BY
+                            1
                         LIMIT
                             1000
                     )
-                ORDER BY
-                    1
             )
         GROUP BY
             grp
