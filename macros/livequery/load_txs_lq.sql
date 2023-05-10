@@ -32,7 +32,7 @@ INSERT INTO
                         ORDER BY
                             1 DESC
                         LIMIT
-                            1000
+                            750
                     )
             )
         GROUP BY
