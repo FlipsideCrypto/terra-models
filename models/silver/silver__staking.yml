@@ -10,10 +10,6 @@ models:
         description: "{{ doc('action') }}"
         tests:
           - not_null
-      - name: BLOCKCHAIN
-        description: "{{ doc('blockchain') }}"
-        tests:
-          - not_null
       - name: BLOCK_ID
         description: "{{ doc('block_id') }}"
         tests:
@@ -25,10 +21,6 @@ models:
           # - dbt_expectations.expect_row_values_to_have_recent_data:
           #     datepart: day
           #     interval: 1
-      - name: CHAIN_ID
-        description: "{{ doc('chain_id') }}"
-        tests:
-          - not_null
       - name: DELEGATOR_ADDRESS
         description: "{{ doc('delegator_address') }}"
         tests:
@@ -43,6 +35,7 @@ models:
               column_type_list:
                 - decimal
                 - float
+                - number
       - name: TX_ID
         description: "{{ doc('tx_id') }}"
         tests:

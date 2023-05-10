@@ -4,12 +4,7 @@ models:
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
-            - BLOCK_ID
-            - TX_ID
-            - ACTION
-            - MESSAGE_INDEX
-            - DELEGATOR_ADDRESS
-            - VALIDATOR_ADDRESS
+            - STAKING_ID
     columns:
       - name: ACTION
         description: "{{ doc('action') }}"
@@ -17,8 +12,6 @@ models:
           - not_null
       - name: BLOCKCHAIN
         description: "{{ doc('blockchain') }}"
-        tests:
-          - not_null
       - name: BLOCK_ID
         description: "{{ doc('block_id') }}"
         tests:
@@ -32,8 +25,6 @@ models:
       #         interval: 1
       - name: CHAIN_ID
         description: "{{ doc('chain_id') }}"
-        tests:
-          - not_null
       - name: DELEGATOR_ADDRESS
         description: "{{ doc('delegator_address') }}"
         tests:
@@ -47,6 +38,7 @@ models:
               column_type_list:
                 - decimal
                 - float
+                - number
       - name: TX_ID
         description: "{{ doc('tx_id') }}"
         tests:

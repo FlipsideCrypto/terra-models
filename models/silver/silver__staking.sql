@@ -1,166 +1,380 @@
-{{
-    config(
-        materialized="incremental",
-        cluster_by=["_inserted_timestamp::DATE"],
-        unique_key = "staking_id",
-    )
-}}
+{{ config(
+    materialized = 'incremental',
+    unique_key = "staking_id",
+    incremental_strategy = 'merge',
+    cluster_by = ['block_timestamp::DATE']
+) }}
 
-with
-    delegated as (
-        select
-            'terra' as blockchain,
-            block_id,
-            block_timestamp,
-            tx_id,
-            tx_succeeded,
-            chain_id,
-            message_index as msg_index,
-            'Delegate' as action,
-            message_value:delegator_address::string as delegator_address,
-            {{ change_decimal("MESSAGE_VALUE:amount:amount") }} as amount,
-            message_value:validator_address::string as validator_address,
-            _ingested_at,
+WITH
+
+{% if is_incremental() %}
+max_date AS (
+
+    SELECT
+        MAX(
             _inserted_timestamp
+        ) _inserted_timestamp
+    FROM
+        {{ this }}
+),
+{% endif %}
 
-        from {{ ref("silver__messages") }}
-        where
-            message_type ilike '%msgdelegate%'
-            and attributes:message:module::string = 'staking'
-            and tx_succeeded = 'True'
-            and {{ incremental_load_filter("_inserted_timestamp") }}
+base AS (
+    SELECT
+        DISTINCT A.tx_id,
+        A.msg_type,
+        A.msg_index,
+        msg_group,
+        msg_sub_group
+    FROM
+        {{ ref('silver__msg_attributes_2') }} A
+    WHERE
+        msg_type IN (
+            'delegate',
+            'redelegate',
+            'unbond',
+            'create_validator'
+        )
 
-    ),
-    message_exec as (
-        select
-            'terra' as blockchain,
-            block_id,
-            block_timestamp,
-            tx_id,
-            tx_succeeded,
-            chain_id,
-            message_index as msg_index,
-            'Delegate' as action,
-            message_value.value:delegator_address::string as delegator_address,
-            message_value.value:amount:amount / pow(10, 6)::integer as amount,
-            message_value.value:validator_address::string as validator_address,
-            _ingested_at,
+{% if is_incremental() %}
+AND _inserted_timestamp >= (
+    SELECT
+        MAX(
             _inserted_timestamp
-
-
-        from
-            {{ ref("silver__messages") }},
-            lateral flatten(message_value:msgs) message_value
-        where
-            message_value.value:"@type" ilike '%MsgDelegate'
-            and message_type ilike '%MsgExec%'
-            and tx_succeeded = 'True'
-            and {{ incremental_load_filter("_inserted_timestamp") }}
-    ),
-    undelegated as (
-        select
-            'terra' as blockchain,
-            block_id,
-            block_timestamp,
-            tx_id,
-            tx_succeeded,
-            chain_id,
-            message_index as msg_index,
-            'Undelegate' as action,
-            message_value:delegator_address::string as delegator_address,
-            {{ change_decimal("MESSAGE_VALUE:amount:amount") }} as amount,
-            message_value:validator_address::string as validator_address,
-            _ingested_at,
-            _inserted_timestamp
-        from {{ ref("silver__messages") }}
-        where
-            message_type ilike '%msgundelegate%'
-            and attributes:message:module::string = 'staking'
-            and tx_succeeded = 'True'
-            and {{ incremental_load_filter("_inserted_timestamp") }}
-
-    ),
-    redelegated as (
-        select
-            'terra' as blockchain,
-            block_id,
-            block_timestamp,
-            tx_id,
-            tx_succeeded,
-            chain_id,
-            message_index as msg_index,
-            'Redelegate' as action,
-            message_value:delegator_address::string as delegator_address,
-            {{ change_decimal("MESSAGE_VALUE:amount:amount") }} as amount,
-            -- MESSAGE_VALUE:amount:amount / pow(10, 6)::integer as amount,
-            message_value:validator_dst_address::string as validator_address,
-            _ingested_at,
-            _inserted_timestamp
-
-        from {{ ref("silver__messages") }}
-        where
-            message_type ilike '%MsgBeginRedelegate%'
-            and attributes:message:module::string = 'staking'
-            and tx_succeeded = 'True'
-            and {{ incremental_load_filter("_inserted_timestamp") }}
-
-
-    ),
-    src_address as (
-        select
-            tx_id, message_value:validator_src_address::string as validator_src_address
-        from {{ ref("silver__messages") }}
-        where
-            message_type ilike '%MsgBeginRedelegate%'
-            and attributes:message:module::string = 'staking'
-            and tx_succeeded = 'True'
-            and {{ incremental_load_filter("_inserted_timestamp") }}
-
-    ),
-    union_delegations as (
-        select *
-        from delegated
-        union all
-        select *
-        from message_exec
-        union all
-        select *
-        from undelegated
-        union all
-        select *
-        from redelegated
-    ),
-
-final_table AS (
-select 
-    DISTINCT CONCAT(
-            union_delegations.tx_id,
-            '-',
-            action,
-            '-',
-            msg_index,
-            '-',
-            delegator_address
-        ) AS staking_id,
-    blockchain,
-    block_id,
-    block_timestamp,
-    union_delegations.tx_id,
-    tx_succeeded,
-    chain_id,
-    msg_index,
-    action,
-    delegator_address,
-    amount,
-    validator_address,
-    _ingested_at,
-    _inserted_timestamp, 
-    src_address.validator_src_address
-from union_delegations
-left outer join src_address on union_delegations.tx_id = src_address.tx_id
+        )
+    FROM
+        max_date
 )
+{% endif %}
+),
+msg_attr AS (
+    SELECT
+        A.tx_id,
+        A.attribute_key,
+        A.attribute_value,
+        A.msg_index,
+        A.msg_type,
+        A.msg_group,
+        A.msg_sub_group,
+        block_id,
+        block_timestamp,
+        tx_succeeded,
+        _inserted_timestamp
+    FROM
+        {{ ref('silver__msg_attributes_2') }} A
+        JOIN (
+            SELECT
+                DISTINCT tx_id,
+                msg_index
+            FROM
+                base
+            UNION
+            SELECT
+                DISTINCT tx_id,
+                msg_index + 1 msg_index
+            FROM
+                base
+        ) b
+        ON A.tx_id = b.tx_id
+        AND A.msg_index = b.msg_index
+    WHERE
+        A.msg_type IN (
+            'delegate',
+            'message',
+            'redelegate',
+            'unbond',
+            'create_validator'
+        )
 
+{% if is_incremental() %}
+AND _inserted_timestamp >= (
+    SELECT
+        MAX(
+            _inserted_timestamp
+        )
+    FROM
+        max_date
+)
+{% endif %}
+),
+tx_address AS (
+    SELECT
+        A.tx_id,
+        SPLIT_PART(
+            attribute_value,
+            '/',
+            0
+        ) AS tx_caller_address
+    FROM
+        {{ ref('silver__msg_attributes_2') }} A
+        JOIN (
+            SELECT
+                DISTINCT tx_id
+            FROM
+                base
+        ) b
+        ON A.tx_id = b.tx_id
+    WHERE
+        attribute_key = 'acc_seq'
+
+{% if is_incremental() %}
+AND _inserted_timestamp >= (
+    SELECT
+        MAX(
+            _inserted_timestamp
+        )
+    FROM
+        max_date
+)
+{% endif %}
+
+qualify(ROW_NUMBER() over(PARTITION BY A.tx_id
+ORDER BY
+    msg_index)) = 1
+),
+valid AS (
+    SELECT
+        tx_id,
+        msg_group,
+        msg_sub_group,
+        msg_index,
+        OBJECT_AGG(
+            attribute_key :: STRING,
+            attribute_value :: variant
+        ) AS j,
+        COALESCE(
+            j :validator :: STRING,
+            j :destination_validator :: STRING
+        ) AS validator_address,
+        j :source_validator :: STRING AS redelegate_source_validator_address
+    FROM
+        msg_attr
+    WHERE
+        attribute_key LIKE '%validator'
+    GROUP BY
+        tx_id,
+        msg_group,
+        msg_sub_group,
+        msg_index
+),
+sendr AS (
+    SELECT
+        tx_id,
+        msg_group,
+        msg_sub_group,
+        msg_index,
+        OBJECT_AGG(
+            attribute_key :: STRING,
+            attribute_value :: variant
+        ) AS j,
+        j :sender :: STRING AS sender
+    FROM
+        msg_attr A
+    WHERE
+        attribute_key = 'sender'
+    GROUP BY
+        tx_id,
+        msg_group,
+        msg_sub_group,
+        msg_index
+),
+amount AS (
+    SELECT
+        tx_id,
+        msg_group,
+        msg_sub_group,
+        msg_index,
+        OBJECT_AGG(
+            attribute_key :: STRING,
+            attribute_value :: variant
+        ) AS j,
+        j :amount :: STRING AS amount
+    FROM
+        msg_attr
+    WHERE
+        attribute_key = 'amount'
+    GROUP BY
+        tx_id,
+        msg_group,
+        msg_sub_group,
+        msg_index
+),
+ctime AS (
+    SELECT
+        tx_id,
+        msg_group,
+        msg_sub_group,
+        msg_index,
+        OBJECT_AGG(
+            attribute_key :: STRING,
+            attribute_value :: variant
+        ) AS j,
+        j :completion_time :: STRING AS completion_time
+    FROM
+        msg_attr
+    WHERE
+        attribute_key = 'completion_time'
+    GROUP BY
+        tx_id,
+        msg_group,
+        msg_sub_group,
+        msg_index
+),
+prefinal AS (
+    SELECT
+        A.tx_id,
+        A.msg_group,
+        A.msg_sub_group,
+        b.sender AS delegator_address,
+        d.amount,
+        A.msg_type AS action,
+        C.validator_address,
+        C.redelegate_source_validator_address,
+        e.completion_time
+    FROM
+        (
+            SELECT
+                DISTINCT tx_id,
+                msg_group,
+                msg_sub_group,
+                msg_index,
+                REPLACE(
+                    REPLACE(
+                        msg_type,
+                        'unbond',
+                        'undelegate'
+                    ),
+                    'create_validator',
+                    'delegate'
+                ) msg_type
+            FROM
+                base
+        ) A
+        JOIN sendr b
+        ON A.tx_id = b.tx_id
+        AND A.msg_group = b.msg_group
+        AND A.msg_index + 1 = b.msg_index
+        JOIN valid C
+        ON A.tx_id = C.tx_id
+        AND A.msg_group = C.msg_group
+        AND A.msg_index = C.msg_index
+        JOIN amount d
+        ON A.tx_id = d.tx_id
+        AND A.msg_group = d.msg_group
+        AND A.msg_index = d.msg_index
+        LEFT JOIN ctime e
+        ON A.tx_id = e.tx_id
+        AND A.msg_group = e.msg_group
+        AND A.msg_index = e.msg_index
+),
+add_dec AS (
+    SELECT
+        b.block_id,
+        b.block_timestamp,
+        A.tx_id,
+        b.tx_succeeded,
+        C.tx_caller_address,
+        A.action,
+        A.msg_group,
+        A.msg_sub_group,
+        A.delegator_address,
+        SUM(
+            CASE
+                WHEN A.split_amount LIKE '%uluna' THEN REPLACE(
+                    A.split_amount,
+                    'uluna'
+                )
+                WHEN A.split_amount LIKE '%pool%' THEN LEFT(A.split_amount, CHARINDEX('g', A.split_amount) -1)
+                WHEN A.split_amount LIKE '%ibc%' THEN LEFT(A.split_amount, CHARINDEX('i', A.split_amount) -1)
+                ELSE A.split_amount
+            END :: INT
+        ) AS amount,
+        CASE
+            WHEN A.split_amount LIKE '%uluna' THEN 'uluna'
+            WHEN A.split_amount LIKE '%pool%' THEN SUBSTRING(A.split_amount, CHARINDEX('g', A.split_amount), 99)
+            WHEN A.split_amount LIKE '%ibc%' THEN SUBSTRING(A.split_amount, CHARINDEX('i', A.split_amount), 99)
+            ELSE 'uluna'
+        END AS currency,
+        A.validator_address,
+        A.redelegate_source_validator_address,
+        A.completion_time :: datetime completion_time,
+        b._inserted_timestamp
+    FROM
+        (
+            SELECT
+                p.tx_id,
+                p.action,
+                p.msg_group,
+                p.msg_sub_group,
+                p.delegator_address,
+                p.validator_address,
+                p.redelegate_source_validator_address,
+                p.completion_time,
+                am.value AS split_amount
+            FROM
+                prefinal p,
+                LATERAL SPLIT_TO_TABLE(
+                    p.amount,
+                    ','
+                ) am
+        ) A
+        JOIN (
+            SELECT
+                DISTINCT tx_id,
+                block_id,
+                block_timestamp,
+                tx_succeeded,
+                _inserted_timestamp
+            FROM
+                msg_attr
+        ) b
+        ON A.tx_id = b.tx_id
+        JOIN tx_address C
+        ON A.tx_id = C.tx_id
+    GROUP BY
+        b.block_id,
+        b.block_timestamp,
+        A.tx_id,
+        b.tx_succeeded,
+        C.tx_caller_address,
+        A.action,
+        A.msg_group,
+        A.msg_sub_group,
+        A.delegator_address,
+        currency,
+        A.validator_address,
+        A.redelegate_source_validator_address,
+        completion_time,
+        b._inserted_timestamp
+)
 SELECT
-    *
-FROM 
-    final_table
+    concat_ws(
+        '-',
+        tx_id,
+        msg_group,
+        COALESCE(
+            msg_sub_group,
+            -1
+        ),
+        action,
+        currency,
+        delegator_address,
+        validator_address
+    ) AS staking_id,
+    block_id,
+    A.block_timestamp,
+    A.tx_id,
+    A.tx_succeeded,
+    A.tx_caller_address,
+    A.action,
+    A.msg_group,
+    A.msg_sub_group,
+    A.delegator_address,
+    A.amount,
+    A.currency,
+    A.validator_address,
+    A.redelegate_source_validator_address AS validator_src_address,
+    A.completion_time,
+    A._inserted_timestamp
+FROM
+    add_dec A
