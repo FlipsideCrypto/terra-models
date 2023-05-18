@@ -50,7 +50,7 @@ ALTER USER AWS_LAMBDA_TERRA_API SET PASSWORD = 'new_password';
 ```
 ### Register Snowflake integration and UDF's
 
-- Register the ![snowflake api integration](/macros/streamline/api_integrations.sql)
+- Register the ![snowflake api integration](/macros/streamline/api_integrations.sql) either manually on `snowsight worksheet` or via `dbt`
 
 ```sql
 -- Manually run on snowflake
@@ -75,6 +75,14 @@ OR REPLACE EXTERNAL FUNCTION streamline.udf_bulk_json_rpc(json variant) returns 
 - Add the ![_max_block_by_date.sql](_max_block_by_date.sql) model
 - Add the ![streamline__blocks](streamline__blocks.sql) model
 - Add the ![get_base_table_udft.sql](../../../macros/streamline/get_base_table_udft.sql) macro
+
+- Grant privileges to `AWS_LAMBDA_TERRA_API`
+
+```sql
+GRANT SELECT ON VIEW streamline.pc_getBlock_realtime TO ROLE AWS_LAMBDA_TERRA_API;
+
+GRANT USAGE ON DATABASE TERRA_DEV TO ROLE AWS_LAMBDA_TERRA_API;
+```
 
 ```zsh
 dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True, "STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES": True}' -m 1+models/silver/streamline/core/realtime/streamline__pc_getBlock_realtime.sql --profile terra --target sbx --profiles-dir ~/.dbt
