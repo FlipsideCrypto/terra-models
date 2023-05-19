@@ -1,6 +1,6 @@
 ## Sandbox integration setup
 
-In order to perform a `sandbox` `streamline` integration you need to ![register](./macros/streamline/api_integrations.sql) with your `sbx api gateway` endpoint. 
+In order to perform a `sandbox` `streamline` integration you need to ![register](/macros/streamline/api_integrations.sql) with your `sbx api gateway` endpoint. 
 
 ### DBT Global config
 - The first step is to configure your `global dbt` profile:
@@ -64,7 +64,7 @@ CREATE api integration IF NOT EXISTS aws_terra_api_sbx_shah api_provider = aws_a
 dbt run-operation create_aws_terra_api --target dev
 ```
 
-- Add the UDF to the ![create udfs macro](./macros/create_udfs.sql)
+- Add the UDF to the ![create udfs macro](/macros/create_udfs.sql)
 - Register UDF
 
 ```sql
@@ -74,7 +74,7 @@ OR REPLACE EXTERNAL FUNCTION streamline.udf_bulk_json_rpc(json variant) returns 
 
 - Add the ![_max_block_by_date.sql](_max_block_by_date.sql) model
 - Add the ![streamline__blocks](streamline__blocks.sql) model
-- Add the ![get_base_table_udft.sql](../../../macros/streamline/get_base_table_udft.sql) macro
+- Add the ![get_base_table_udft.sql](../.././macros/streamline/get_base_table_udft.sql) macro
 
 - Grant privileges to `AWS_LAMBDA_TERRA_API`
 
