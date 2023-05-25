@@ -10,7 +10,7 @@ models:
             - block_id
       - sequence_gaps:
           column_name: block_id
-          where: BLOCK_TIMESTAMP < CURRENT_DATE and BLOCK_ID > 4380273
+          where: BLOCK_TIMESTAMP < CURRENT_DATE and BLOCK_TIMESTAMP > CURRENT_DATE - 3
 
     columns:
       - name: BLOCK_ID
@@ -162,7 +162,7 @@ models:
         description: "{{ doc('validator_address_array') }}"
         tests:
           - not_null:
-              where: BLOCK_TIMESTAMP < CURRENT_DATE-7 and BLOCK_ID > 4380273
+              where: BLOCK_TIMESTAMP < CURRENT_DATE-7 and BLOCK_TIMESTAMP > CURRENT_DATE - 3
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - ARRAY

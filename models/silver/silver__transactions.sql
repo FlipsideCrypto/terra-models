@@ -89,6 +89,7 @@ silver_txs AS (
             WHEN msg0_key = 'spender' THEN msg0_value
             WHEN msg0_key = 'granter' THEN tx_payer
             WHEN msg0_key = 'fee' THEN COALESCE(tx_grantee, SPLIT(acc_seq, '/') [0] :: STRING)
+            ELSE msg0_value
         END AS tx_sender,
         CASE
             WHEN block_id <= 4711778 THEN tx :auth_info :fee :gas_limit :: NUMBER
