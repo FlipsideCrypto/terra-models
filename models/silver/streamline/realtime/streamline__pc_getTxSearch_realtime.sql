@@ -31,6 +31,7 @@ blocks AS (
                     last_3_days
             )
         )
+    EXCEPT
     SELECT
         block_number
     FROM
