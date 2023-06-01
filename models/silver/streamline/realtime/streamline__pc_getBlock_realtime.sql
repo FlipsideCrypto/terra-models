@@ -36,15 +36,6 @@ blocks AS (
         block_number
     FROM
         {{ ref("bronze__streamline_blocks") }}
-    WHERE
-        (
-            block_number >= (
-                SELECT
-                    block_number
-                FROM
-                    last_3_days
-            )
-        )
 )
 SELECT
     PARSE_JSON(
