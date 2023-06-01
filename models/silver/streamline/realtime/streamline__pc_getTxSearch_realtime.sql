@@ -1,7 +1,7 @@
 {{ config (
     materialized = "view",
     post_hook = if_data_call_function(
-        func = "{{this.schema}}.udf_bulk_json_rpc(object_construct('sql_source', '{{this.identifier}}', 'external_table', 'pc_getBlock', 'sql_limit', {{var('sql_limit','40000')}}, 'producer_batch_size', {{var('producer_batch_size','10000')}}, 'worker_batch_size', {{var('worker_batch_size','1000')}}, 'batch_call_limit', {{var('batch_call_limit','10')}}))",
+        func = "{{this.schema}}.udf_bulk_json_rpc(object_construct('sql_source', '{{this.identifier}}', 'external_table', 'pc_getTxSearch', 'sql_limit', {{var('sql_limit','40000')}}, 'producer_batch_size', {{var('producer_batch_size','10000')}}, 'worker_batch_size', {{var('worker_batch_size','1000')}}, 'batch_call_limit', {{var('batch_call_limit','10')}}))",
         target = "{{this.schema}}.{{this.identifier}}"
     )
 ) }}
@@ -35,15 +35,16 @@ blocks AS (
     SELECT
         block_number :: STRING
     FROM
-        {{ ref("bronze__streamline_blocks") }}
+        {{ ref("bronze__streamline_transactions") }}
 )
 SELECT
     PARSE_JSON(
         CONCAT(
             '{"jsonrpc": "2.0",',
-            '"method": "block", "params":["',
+            '"method": "tx_search", "params":["',
+            'tx.height=',
             block_id :: INTEGER,
-            '"],"id":"',
+            '",true, "1" ,"1000" ,"asc"],"id":"',
             block_id :: STRING,
             '"}'
         )
