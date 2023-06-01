@@ -52,8 +52,8 @@ SELECT
             '{"jsonrpc": "2.0",',
             '"method": "tx_search", "params":["',
             'tx.height=',
-            block_id :: STRING,
-            'true, "1" ,"1000" ,"asc"],"id":"',
+            block_id :: INTEGER,
+            '",true, "1" ,"1000" ,"asc"],"id":"',
             block_id :: STRING,
             '"}'
         )
