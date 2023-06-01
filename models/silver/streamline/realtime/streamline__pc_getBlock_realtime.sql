@@ -33,7 +33,7 @@ blocks AS (
         )
     EXCEPT
     SELECT
-        block_number
+        block_number :: STRING
     FROM
         {{ ref("bronze__streamline_blocks") }}
 )
