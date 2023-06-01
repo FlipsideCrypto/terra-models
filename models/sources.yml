@@ -142,4 +142,10 @@ sources:
     tables:
       - name: lq_blocks
       - name: lq_txs
-
+  - name: bronze_streamline
+    database: streamline
+    schema: |
+      {{ "TERRA_DEV" if var("STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES", False) else "TERRA" }}
+    tables:
+      - name: blocks
+      - name: transactions
