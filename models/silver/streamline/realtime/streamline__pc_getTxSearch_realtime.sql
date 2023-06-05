@@ -44,7 +44,7 @@ SELECT
             '"method": "tx_search", "params":["',
             'tx.height=',
             block_id :: INTEGER,
-            '",true, "1" ,"1000" ,"asc"],"id":"',
+            '",true, "1" ,"1000" ,"asc",true],"id":"',
             block_id :: STRING,
             '"}'
         )
