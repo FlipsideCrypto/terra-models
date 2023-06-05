@@ -28,7 +28,7 @@ jobs:
     uses: FlipsideCrypto/analytics-workflow-templates/.github/workflows/dbt_run_template.yml@main
     with:
       dbt_command: |
-          dbt run -m ./models/silver/streamline/realtime*
+          dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True}'  -m ./models/silver/streamline/realtime*
       environment: workflow_prod
       warehouse: ${{ vars.WAREHOUSE }}
     secrets: inherit
