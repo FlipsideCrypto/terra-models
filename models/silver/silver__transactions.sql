@@ -3,13 +3,72 @@
     cluster_by = ['_inserted_timestamp::DATE'],
     unique_key = 'tx_id'
 ) }}
-
-WITH bronze_txs AS (
+-- depends_on: {{ ref('bronze__streamline_transactions') }}
+-- depends_on: {{ ref('bronze__streamline_FR_transactions') }}
+WITH streamline_txs AS (
 
     SELECT
-        *
+        NULL AS record_id,
+        b.value :hash :: STRING AS tx_id,
+        INDEX AS tx_block_index,
+        NULL AS offset_id,
+        block_number AS block_id,
+        NULL AS block_timestamp,
+        'mainnet' AS network,
+        'terra2' AS chain_id,
+        b.value AS tx,
+        _inserted_timestamp AS _ingested_at,
+        _inserted_timestamp
     FROM
-        {{ ref('bronze__transactions') }}
+
+{% if is_incremental() %}
+{{ ref('bronze__streamline_transactions') }}
+{% else %}
+    {{ ref('bronze__streamline_FR_transactions') }}
+{% endif %}
+
+A,
+LATERAL FLATTEN(
+    input => A.data :result :txs
+) AS b
+WHERE
+    key = 'block'
+
+{% if is_incremental() %}
+AND {{ incremental_last_x_days(
+    '_inserted_timestamp',
+    3
+) }}
+{% endif %}
+),
+bronze_txs AS (
+    SELECT
+        record_id,
+        tx_id,
+        tx_block_index,
+        offset_id,
+        block_id,
+        block_timestamp,
+        network,
+        chain_id,
+        tx,
+        _ingested_at,
+        _inserted_timestamp
+    FROM(
+            SELECT
+                record_id,
+                tx_id,
+                tx_block_index,
+                offset_id,
+                block_id,
+                block_timestamp,
+                network,
+                chain_id,
+                tx,
+                _ingested_at,
+                _inserted_timestamp
+            FROM
+                {{ ref('bronze__transactions') }}
 
 {% if is_incremental() %}
 WHERE
@@ -20,8 +79,12 @@ WHERE
             {{ this }}
     )
 {% endif %}
-
-qualify ROW_NUMBER() over (
+UNION ALL
+SELECT
+    *
+FROM
+    streamline_txs
+) qualify ROW_NUMBER() over (
     PARTITION BY tx_id
     ORDER BY
         _inserted_timestamp DESC
