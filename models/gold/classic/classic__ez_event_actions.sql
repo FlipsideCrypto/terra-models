@@ -1,6 +1,5 @@
 {{ config(
   materialized = 'view',
-  secure = 'true',
   tags = ['snowflake', 'classic', 'event_actions', 'terra']
 ) }}
 

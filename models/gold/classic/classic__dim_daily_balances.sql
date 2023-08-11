@@ -1,6 +1,5 @@
 {{ config(
     materialized = 'view',
-    secure = 'true',
     tags = ['classic'],
     meta ={ 'database_tags':{ 'table':{ 'PURPOSE': 'BALANCES' }} }
 ) }}

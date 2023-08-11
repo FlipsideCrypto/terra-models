@@ -1,10 +1,14 @@
 {{ config(
     materialized = 'view',
-    secure = 'true',
     tags = ['classic']
 ) }}
 
 SELECT
-    *
+  block_id,
+  block_timestamp,
+  blockchain,
+  chain_id,
+  proposer_address,
+  tx_count
 FROM
-    {{ ref('terra_sv__blocks') }}
+  {{ ref('silver_classic__blocks') }}

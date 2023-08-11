@@ -1,10 +1,16 @@
 {{ config(
     materialized = 'view',
-    secure = 'true',
     tags = ['classic']
 ) }}
 
 SELECT
-    *
+  block_id,
+  block_timestamp,
+  blockchain,
+  chain_id,
+  transition_type,
+  INDEX,
+  event,
+  event_attributes
 FROM
-    {{ ref('terra_sv__transitions') }}
+  {{ ref('silver_classic__transitions') }}
