@@ -61,76 +61,6 @@ sources:
             description: The time this row was ingested by Chainwalkers
           - name: _inserted_timestamp
             description: The time this row was inserted into Snowflake
-  - name: anchor
-    schema: anchor
-    database: flipside_prod_db
-    tables:
-      - name: bonds
-      - name: borrows
-      - name: burns
-      - name: collateral
-      - name: deposits
-      - name: gov_staking
-      - name: gov_submit_proposal
-      - name: gov_vote
-      - name: liquidations
-      - name: redeem
-      - name: repay
-      - name: reward_claims
-  - name: astroport
-    schema: astroport
-    database: flipside_prod_db
-    tables:
-      - name: pool_reserves
-      - name: swaps
-  - name: gold
-    schema: gold
-    database: flipside_prod_db
-    tables:
-      - name: terra_address_labels
-      - name: terra_address_tags
-      - name: terra_daily_balances
-      - name: terra_prices
-  - name: terra
-    schema: terra
-    database: flipside_prod_db
-    tables:
-      - name: airdrop_claims
-      - name: daily_balances
-      - name: gov_submit_proposal
-      - name: gov_vote
-      - name: nft_metadata
-      - name: oracle_prices
-      - name: reward
-      - name: staking
-      - name: swaps
-      - name: tax_rate
-      - name: transfers
-      - name: validator_labels
-      - name: validator_voting_power
-  - name: terraswap
-    schema: terraswap
-    database: flipside_prod_db
-    tables:
-      - name: lp_actions
-      - name: lp_stake
-      - name: pool_reserves
-      - name: swaps
-  - name: terra_sv
-    schema: terra_sv
-    database: flipside_prod_db
-    tables:
-      - name: blocks
-      - name: labels
-      - name: msgs
-      - name: msg_events
-      - name: transactions
-      - name: transitions
-  - name: labels
-    schema: silver_crosschain
-    database: flipside_prod_db
-    tables:
-      - name: address_labels
   - name: labels_v2
     schema: silver
     database: crosschain
@@ -142,6 +72,11 @@ sources:
     tables:
       - name: lq_blocks
       - name: lq_txs
+      - name: classic_validator_voting_power
+      - name: classic_terra_api
+      - name: classic_terra_sink_645110886
+      - name: classic_rest_proxy_1507016047
+      - name: terra_balances
   - name: bronze_streamline
     database: streamline
     schema: |
@@ -149,3 +84,17 @@ sources:
     tables:
       - name: blocks
       - name: transactions
+  - name: shared
+    database: crosschain
+    schema: bronze
+    tables:
+      - name: legacy_prices
+      - name: prod_address_label_sink_291098491
+      - name: prod_address_tag_sync_1480319581
+      - name: prod_nft_metadata_uploads_1828572827
+      - name: prod_data_science_uploads_1748940988
+  - name: crosschain_core
+    database: crosschain
+    schema: core
+    tables:
+      - name: dim_date_hours

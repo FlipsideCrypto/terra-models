@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: classic__dim_labels
+    descriptions: |-
+      This table contains Terra blockchain's list of addresses and their labels.
+    columns:
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: LABEL
+        description: "{{ doc('project_name') }}"
+      - name: ADDRESS
+        description: "{{ doc('address') }}"
+      - name: CREATOR
+        description: "{{ doc('creator') }}"
+      - name: LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+      - name: LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+      - name: ADDRESS_NAME
+        description: "{{ doc('label') }}"
+

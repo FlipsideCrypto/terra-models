@@ -1,0 +1,38 @@
+version: 2
+models:
+  - name: classic__ez_event_actions
+    description: Row based event actions table curated from message events, event attributes. Actions or methods in the 'from_contract' event type are displayed as records based on contract address.
+    columns:
+      - name: BLOCKCHAIN
+        description: The blockchain where this action is 
+        
+      - name: BLOCK_ID
+        description: The block number for this action
+        
+      - name: BLOCK_TIMESTAMP
+        description: The timestamp this action was generated
+       
+      - name: CHAIN_ID
+        description: The blockchain id for this action, in Terra, there are columbus-4 and columbus-5
+        
+      - name: TX_ID
+        description: The unique identifier to find this transaction 
+        
+      - name: MSG_INDEX
+        description: The message index where this action took place
+        
+      - name: ACTION_INDEX
+        description: The action index where this action took place
+        
+      - name: ACTION_CONTRACT_ADDRESS
+        description: Contract address that kicked off this event action
+
+      - name: CONTRACT_LABEL
+        description: The label for the contract address
+        
+      - name: ACTION_METHOD
+        description: The action or method within an event
+        
+      - name: ACTION_LOG
+        description: The log that provides detail (amounts, to, from, etc.) to an action or method
+        

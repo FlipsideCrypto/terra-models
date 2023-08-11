@@ -1,0 +1,7 @@
+version: 2
+models:
+  - name: silver_classic__tax_rate
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - BLOCK_NUMBER

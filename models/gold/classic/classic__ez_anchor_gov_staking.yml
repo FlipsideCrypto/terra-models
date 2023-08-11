@@ -1,0 +1,40 @@
+version: 2
+models:
+  - name: classic__ez_anchor_gov_staking
+    descriptions: |-
+      This table records the staking and withdrawing of voting tokens on Anchor protocol. 
+    columns:
+      - name: BLOCKCHAIN
+        description: the blockchain this transaction sit on
+        
+      - name: CHAIN_ID
+        description: the blockchain id for this transaction, in Terra, there are columbus-4 and columbus-5
+        
+      - name: BLOCK_ID
+        description: the block number for this transaction
+        
+      - name: BLOCK_TIMESTAMP
+        description: the timestamp this transaction get generated
+   
+      - name: TX_ID
+        description: the unique identifier to find this transaction 
+        
+      - name: EVENT_TYPE
+        description: the event type for this transaction 
+        
+      - name: SENDER
+        description: the sender address for this transaction
+        
+      - name: AMOUNT
+        description: the burned amount in the currency listed in the CURRENCY column
+  
+      - name: AMOUNT_USD
+        description: the burned amount in USD currency
+
+      - name: CURRENCY
+        description: the burned amount currency 
+        
+      - name: CONTRACT_ADDRESS
+        description: Anchor contract address
+      - name: CONTRACT_LABEL
+        description: Anchor contract address in the label

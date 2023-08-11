@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: classic__fact_messages
+    description: |-
+      This table records all the message information. 
+    
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+
+      - name: TX_STATUS
+        description: Transaction status
+      
+      - name: TX_MODULE
+        description: Transaction Module for this message
+      
+      - name: TX_TYPE
+        description: Transaction Type for this message
+      
+      - name: TX_MEMO
+        description: Transaction memo
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+
+      - name: MSG_INDEX
+        description: "{{ doc('message_index') }}"
+
+      - name: MSG_TYPE
+        description: "{{ doc('message_type') }}"
+
+      - name: MSG_VALUE
+        description: "{{ doc('message_value') }}"
+
+      - name: MSG_MODULE
+        description: Message module

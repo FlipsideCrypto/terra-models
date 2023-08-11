@@ -1,0 +1,79 @@
+version: 2
+models:
+  - name: classic__ez_swaps
+    descriptions: |-
+      This table records native, on-chain swaps executed by the Terra blockchain’s minting/burning mechanism. 
+
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+
+      - name: TX_STATUS
+        description: Transaction status.
+
+      - name: MSG_INDEX
+        description: "{{ doc('msg_index') }}"
+
+      - name: TRADER
+        description: "{{ doc('trader') }}"
+
+      - name: SWAP_FEE_AMOUNT
+        description: Fee amount
+
+      - name: SWAP_FEE_AMOUNT_USD
+        description: Fee amount, in USD.
+          
+      - name: SWAP_FEE_CURRENCY
+        description: The fee currency.
+      
+      - name: ASK_CURRENCY
+        description: The currency asked for in this swap.
+
+      - name: OFFER_AMOUNT
+        description: Amount to offer for this swap
+
+      - name: OFFER_AMOUNT_USD
+        description: Amount to offer for this swap, in USD
+          
+      - name: OFFER_CURRENCY
+        description: Currency offered
+      
+      - name: TOKEN_0_AMOUNT
+        description: Swap token_0 amount.
+
+      - name: TOKEN_0_AMOUNT_USD
+        description: Swap token_0 amount, in USD
+          
+      - name: TOKEN_0_CURRENCY
+        description: Currency of token_0
+      
+      - name: TOKEN_1_AMOUNT
+        description: Swap token_1 amount.
+
+      - name: TOKEN_1_AMOUNT_USD
+        description: Swap token_1 amount, in USD
+          
+      - name: TOKEN_1_CURRENCY
+        description: Currency of token_1
+      
+      - name: PRICE0_USD
+        description: The price for token_0
+
+      - name: PRICE1_USD
+        description: The price for token_1
+          
+      - name: SWAP_PAIR
+        description: The concatenated field for the combination of token_0 and token_1
+      

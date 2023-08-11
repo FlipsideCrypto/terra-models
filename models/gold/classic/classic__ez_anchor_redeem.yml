@@ -1,0 +1,42 @@
+version: 2
+models:
+  - name: classic__ez_anchor_redeem
+    descriptions: |-
+      This table records redemption events on Anchor protocol.
+    columns:
+      - name: BLOCKCHAIN
+        description: the blockchain this transaction sit on
+        
+      - name: CHAIN_ID
+        description: the blockchain id for this transaction, in Terra, there are columbus-4 and columbus-5
+        
+      - name: BLOCK_ID
+        description: the block number for this transaction
+        
+      - name: BLOCK_TIMESTAMP
+        description: the timestamp this transaction get generated
+        
+      - name: TX_ID
+        description: the unique identifier to find this transaction 
+        
+      - name: SENDER
+        description: the sender address for this transaction
+        
+      - name: AMOUNT
+        description: the redeem amount in the currency listed in the CURRENCY column
+
+      - name: AMOUNT_USD
+        description: the redeem amount in USD currency
+        
+      - name: CURRENCY
+        description: the redeem amount currency 
+        
+      - name: CONTRACT_ADDRESS
+        description: Anchor contract address
+         
+      - name: CONTRACT_LABEL
+        description: Anchor contract address in the label
+         
+      - name: SOURCE
+        description: The transaction source, either the Terra blockchain or sent via Wormhole
+         

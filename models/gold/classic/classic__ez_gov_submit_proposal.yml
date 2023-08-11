@@ -1,0 +1,57 @@
+version: 2
+models:
+  - name: classic__ez_gov_submit_proposal
+    descriptions: |-
+      This table records governance proposal submissions on the Terra blockchain.
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+
+      - name: PROPOSER
+        description: "{{ doc('proposer') }}"
+        
+      - name: PROPOSAL_ID
+        description: "{{ doc('proposal_id') }}"
+
+      - name: PROPOSAL_TYPE
+        description: "{{ doc('proposal_type') }}"
+      
+      - name: DEPOSIT_AMOUNT
+        description: Amount deposited to submit proposal.
+      
+      - name: DEPOSIT_CURRENCY
+        description: Currency of the deposited amount.
+        
+      - name: DEPOSIT_AMOUNT_USD
+        description: Amount deposited to submit proposal, in USD.
+        
+      - name: DESCRIPTION
+        description: Proposal description.
+        
+      - name: MSG_TYPE
+        description: "{{ doc('msg_type') }}"
+        
+      - name: TITLE
+        description: Proposal title.
+      
+      - name: PROPOSER_LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+      - name: PROPOSER_LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+      - name: PROPOSER_ADDRESS_LABEL
+        description: "{{ doc('project_name') }}"
+      - name: PROPOSER_ADDRESS_NAME
+        description: "{{ doc('label') }}"
+        

@@ -1,0 +1,47 @@
+version: 2
+models:
+  - name: classic__ez_gov_vote
+    descriptions: |-
+      This table records governance voting on the Terra blockchain.
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+      
+      - name: TX_STATUS
+        description: Transaction status
+
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+
+      - name: VOTER
+        description: "{{ doc('voter') }}"
+        
+      - name: PROPOSAL_ID
+        description: "{{ doc('proposal_id') }}"
+
+      - name: '"OPTION"'
+        description: Voting option.
+      
+      - name: VOTING_POWER
+        description: The voting power of the address voting.
+        
+      - name: MSG_TYPE
+        description: "{{ doc('msg_type') }}"
+      
+      - name: VOTER_LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+      - name: VOTER_LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+      - name: VOTER_ADDRESS_LABEL
+        description: "{{ doc('project_name') }}"
+      - name: VOTER_ADDRESS_NAME
+        description: "{{ doc('label') }}"

@@ -1,0 +1,34 @@
+version: 2
+models:
+  - name: classic__ez_terraswap_lp_stake
+    descriptions: |-
+      This table records the staking and unstaking of liquidity provider tokens. 
+    columns:
+      - name: BLOCKCHAIN
+        description: the blockchain this transaction sit on
+      - name: CHAIN_ID
+        description: the blockchain id for this transaction, in Terra, there are columbus-4 and columbus-5
+        
+      - name: BLOCK_ID
+        description: the block number for this transaction
+        
+      - name: BLOCK_TIMESTAMP
+        description: the timestamp this transaction get generated
+
+      - name: TX_ID
+        description: the unique identifier to find this transaction
+
+      - name: EVENT_TYPE
+        description: "{{ doc('action') }}"
+        
+      - name: SENDER
+        description: the sender address for this transaction
+
+      - name: AMOUNT
+        description: Amount of token staked
+
+      - name: CONTRACT_ADDRESS
+        description: LP Token contract address
+
+      - name: CONTRACT_LABEL
+        description: LP Token contract label

@@ -1,0 +1,17 @@
+version: 2
+models:
+  - name: silver_classic__block_synthetic_balances
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - DATE
+            - ADDRESS
+            - CURRENCY
+          where: DATE BETWEEN '2022-01-01' AND '2022-06-01' AND BALANCE > 0
+    columns:
+      - name: CURRENCY
+        tests:
+          - not_null
+      - name: BALANCE
+        tests:
+          - not_null

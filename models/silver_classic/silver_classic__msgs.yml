@@ -1,0 +1,10 @@
+version: 2
+models:
+  - name: silver_classic__msgs
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - BLOCK_ID
+            - CHAIN_ID
+            - MSG_INDEX
+            - TX_ID

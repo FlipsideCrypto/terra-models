@@ -1,0 +1,39 @@
+version: 2
+models:
+  - name: classic__ez_anchor_gov_vote
+    descriptions: |-
+      This table records Anchor governance proposal votes.
+    columns:
+      - name: BLOCKCHAIN
+        description: the blockchain this transaction sit on
+        
+      - name: CHAIN_ID
+        description: the blockchain id for this transaction, in Terra, there are columbus-4 and columbus-5
+        
+      - name: BLOCK_ID
+        description: the block number for this transaction
+        
+      - name: BLOCK_TIMESTAMP
+        description: the timestamp this transaction get generated
+        
+      - name: TX_ID
+        description: the unique identifier to find this transaction 
+        
+      - name: VOTER
+        description: the voter address for this proposal
+        
+      - name: POLL_ID
+        description: the identifier of this poll
+        
+      - name: VOTE
+        description: the vote decition to this proposal, yes or no
+        
+      - name: BALANCE
+        description: the balance of voting tokens
+        
+      - name: CONTRACT_ADDRESS
+        description: Anchor contract address
+         
+      - name: CONTRACT_LABEL
+        description: Anchor contract address in the label
+         

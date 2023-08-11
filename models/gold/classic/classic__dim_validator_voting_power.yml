@@ -1,0 +1,17 @@
+version: 2
+models:
+  - name: classic__dim_validator_voting_power
+    descriptions: |-
+      This table records a validator’s voting power per block.
+    columns:
+      - name: ADDRESS
+        description: The validator address (terravaloper).
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      - name: VOTING_POWER
+        description: Validator's voting power, at this block.
+

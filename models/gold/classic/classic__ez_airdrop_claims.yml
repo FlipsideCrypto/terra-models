@@ -1,0 +1,26 @@
+version: 2
+models:
+  - name: classic__ez_airdrop_claims
+    description: |-
+      This table contains all the transfers that occurred in the Terra2 blockchain.
+    columns:
+      - name: AIRDROP_ID
+        description: Stage of airdrop being claimed.
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+      - name: AMOUNT
+        description: The amount of tokens claimed.
+      - name: CONTRACT_ADDRESS
+        description: "{{ doc('address') }}"
+      - name: CONTRACT_LABEL
+        description: "{{ doc('label') }}"
+      - name: CLAIMER
+        description: "{{ doc('tx_sender') }}"
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"

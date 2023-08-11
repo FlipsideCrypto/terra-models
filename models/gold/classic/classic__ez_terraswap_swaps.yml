@@ -1,0 +1,53 @@
+version: 2
+models:
+  - name: classic__ez_terraswap_swaps
+    descriptions: |-
+      This table records Terraswap swaps executed by smart contracts in Terraswap liquidity pools.
+
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+ 
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+      
+      - name: MSG_INDEX
+        description: "{{ doc('msg_index') }}"
+      
+      - name: TX_INDEX
+        description: The position in which actions occur within an event.
+
+      - name: OFFER_CURRENCY
+        description: "{{ doc('from_currency') }}"
+
+      - name: SENDER
+        description: "{{ doc('trader') }}"
+
+      - name: OFFER_AMOUNT
+        description: "{{ doc('from_amount') }}"
+
+      - name: OFFER_AMOUNT_USD
+        description: The amount that the user sent to be swapped for another currency, in USD.
+          
+      - name: RETURN_AMOUNT
+        description: The amount returned to the sender
+  
+      - name: RETURN_CURRENCY
+        description: The currency returned to the sender
+          
+      - name: RETURN_AMOUNT_USD
+        description: The amount returned to the sender, in USD.
+                
+      - name: POOL_ADDRESS
+        description: "{{ doc('liquidity_pool_address') }}"
+      - name: POOL_NAME
+        description: "{{ doc('label') }}"
