@@ -1,0 +1,11 @@
+version: 2
+models:
+  - name: silver_classic__event_actions
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - TX_ID
+            - ACTION_INDEX
+            - MSG_INDEX
+            - ACTION_CONTRACT_ADDRESS
+            - ACTION_METHOD

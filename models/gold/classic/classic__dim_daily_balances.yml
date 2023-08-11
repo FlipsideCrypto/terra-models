@@ -1,0 +1,29 @@
+version: 2
+models:
+  - name: classic__dim_daily_balances
+    descriptions: |-
+      This table records daily balances of native tokens and select CW20 tokens for all addresses on the Terra blockchain.
+    columns:
+      - name: DATE
+        description: Data balance was recorded.
+      - name: ADDRESS
+        description: "{{ doc('address')}}"
+      - name: ADDRESS_LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+      - name: ADDRESS_LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+      - name: ADDRESS_LABEL
+        description: "{{ doc('project_name') }}"
+      - name: ADDRESS_NAME
+        description: "{{ doc('label') }}"
+      - name: BALANCE
+        description: The token amount.
+      - name: BALANCE_TYPE
+        description: Balance type, liquid or staked.
+      - name: BALANCE_USD
+        description: The token amount, in USD.
+      - name: CURRENCY
+        description: "{{ doc('symbol')}}"
+      - name: IS_NATIVE
+        description: Native tokens = TRUE, CW20 tokens = FALSE
+        

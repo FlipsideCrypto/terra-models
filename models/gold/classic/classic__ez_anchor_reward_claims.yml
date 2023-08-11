@@ -1,0 +1,52 @@
+version: 2
+models:
+  - name: classic__ez_anchor_reward_claims
+    descriptions: |-
+      This table records claims of staking and market rewards for the Anchor protocol.
+    columns:
+      - name: BLOCKCHAIN
+        description: the blockchain this transaction sit on
+      - name: CHAIN_ID
+        description: the blockchain id for this transaction, in Terra, there are columbus-4 and columbus-5
+        
+      - name: BLOCK_ID
+        description: the block number for this transaction
+        
+      - name: BLOCK_TIMESTAMP
+        description: the timestamp this transaction get generated
+
+      - name: TX_ID
+        description: the unique identifier to find this transaction 
+        
+      - name: SENDER
+        description: the sender address for this transaction
+
+      - name: CLAIM_0_AMOUNT
+        description: Amount of token 0 claimed
+
+      - name: CLAIM_0_AMOUNT_USD
+        description: Amount of token 0 claimed, in USD
+
+      - name: CLAIM_0_CURRENCY
+        description: Currency of token 0 claimed
+
+      - name: CLAIM_0_CONTRACT
+        description: Token 0 contract address
+
+      - name: CLAIM_0_CONTRACT_LABEL
+        description: Token 0 contract label
+
+      - name: CLAIM_1_AMOUNT
+        description: Amount of token 1 claimed
+
+      - name: CLAIM_1_AMOUNT_USD
+        description: Amount of token 1 claimed, in USD
+
+      - name: CLAIM_1_CURRENCY
+        description: Currency of token 1 claimed
+
+      - name: CLAIM_1_CONTRACT
+        description: Token 1 contract address
+
+      - name: CLAIM_1_CONTRACT_LABEL
+        description: Token 1 contract label

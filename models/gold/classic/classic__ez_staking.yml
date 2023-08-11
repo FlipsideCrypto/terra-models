@@ -1,0 +1,62 @@
+version: 2
+models:
+  - name: classic__ez_staking
+    descriptions: |-
+      This table records delegator staking activities on the Terra blockchain.
+    columns:
+      - name: ACTION
+        description: "{{ doc('action') }}"
+        
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+        
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+      - name: DELEGATOR_ADDRESS
+        description: "{{ doc('delegator_address') }}"
+       
+      - name: EVENT_AMOUNT
+        description: "{{ doc('amount') }}"
+ 
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+        
+      - name: VALIDATOR_ADDRESS
+        description: "{{ doc('validator_address') }}"
+
+      - name: MSG_INDEX
+        description: "{{ doc('msg_index') }}"
+
+      - name: TX_STATUS
+        description: Transaction status
+      
+      - name: PRICE_USD
+        description: Price of token
+
+      - name: EVENT_AMOUNT_USD
+        description: Amount of token, in USD
+
+      - name: CURRENCY
+        description: Currency of token
+      
+      - name: VALIDATOR_LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+      - name: VALIDATOR_LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+      - name: VALIDATOR_ADDRESS_LABEL
+        description: "{{ doc('project_name') }}"
+      - name: VALIDATOR_ADDRESS_NAME
+        description: "{{ doc('label') }}"
+      - name: DELEGATOR_LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+      - name: DELEGATOR_LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+      - name: DELEGATOR_ADDRESS_LABEL
+        description: "{{ doc('project_name') }}"
+      - name: DELEGATOR_ADDRESS_NAME
+        description: "{{ doc('label') }}"

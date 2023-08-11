@@ -1,0 +1,20 @@
+version: 2
+models:
+  - name: classic__dim_oracle_prices
+    descriptions: |-
+      This table records token prices per block_timestamp. Includes prices from two sources: 1. Coinmarketcap 2. Oracle: On-chain messages and transitions.
+    columns:
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      - name: CURRENCY
+        description: "{{ doc('address')}}"
+      - name: LUNA_EXCHANGE_RATE
+        description: The exchange ratio to change this token for LUNA.
+      - name: PRICE_USD
+        description: The price at this timestamp, in USD.
+      - name: SOURCE
+        description: The source of the pricing data.
+      - name: SYMBOL
+        description: "{{ doc('symbol')}}"

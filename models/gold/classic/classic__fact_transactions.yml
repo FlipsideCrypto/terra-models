@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: classic__fact_transactions
+    description: |-
+      This table records all the transactions of the Terra blockchain.
+
+    columns:
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      
+      - name: TX_STATUS_MSG
+        description: Transaction message status
+      
+      - name: TX_MODULE
+        description: Transaction Module for this message
+      
+      - name: TX_CODE
+        description: Transaction Code for this message
+      
+      - name: TX_TYPE
+        description: Transaction Type for this message
+
+      - name: TX_FROM
+        description: "{{ doc('tx_sender') }}"
+      
+      - name: TX_TO
+        description: "{{ doc('receiver') }}"
+
+      - name: GAS_WANTED
+        description: "{{ doc('gas_limit') }}"
+
+      - name: GAS_USED
+        description: "{{ doc('gas_used') }}"
+
+      - name: FEE
+        description: "{{ doc('fee_raw') }}"
+
+      - name: CODESPACE
+        description: "{{ doc('codespace') }}"
+
+      - name: TX_STATUS
+        description: Transaction status

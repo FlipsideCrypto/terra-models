@@ -1,0 +1,17 @@
+version: 2
+models:
+  - name: silver_classic__balances
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - BLOCK_TIMESTAMP
+            - BLOCK_NUMBER
+            - ADDRESS
+            - CURRENCY
+            - BALANCE_TYPE
+          where: BLOCK_TIMESTAMP::DATE BETWEEN '2022-01-01' AND '2022-06-01' AND BALANCE > 0
+    columns:
+      - name: BALANCE
+        tests:
+          - not_null
+          

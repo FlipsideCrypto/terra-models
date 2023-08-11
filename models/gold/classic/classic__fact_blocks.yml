@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: classic__fact_blocks
+    description: |-
+      This table records all the blocks of Terra blockchain.
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id')}}"
+
+      - name: PROPOSER_ADDRESS
+        description: "{{ doc('proposer_address')}}"
+
+      - name: TX_COUNT
+        description: Number of transactions in a block.
+        

@@ -1,0 +1,21 @@
+version: 2
+models:
+  - name: classic__dim_contract_metadata
+    descriptions: |-
+      This table records on-chain contract metadata from contract creation events.
+    columns:
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+      - name: CONTRACT_ADDRESS
+        description: "{{ doc('address') }}"
+      - name: DECIMALS
+        description: "{{ doc('decimal') }}"
+      - name: CONTRACT_NAME
+        description: "{{ doc('label') }}"
+      - name: SYMBOL
+        description: "{{ doc('symbol') }}"
+      - name: IS_WORMHOLE
+        description: Wormhole tokens = TRUE, else FALSE.
+        

@@ -1,0 +1,26 @@
+version: 2
+models:
+  - name: classic__dim_astroport_pool_reserves
+    descriptions: |-
+      This table provides block by block pool reserve information including total pool shares, pool currencies, and token amounts in Astroport pools.
+    columns:
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+      - name: CONTRACT_ADDRESS
+        description: "{{ doc('liquidity_pool_address') }}"
+      - name: TOTAL_SHARE
+        description: "{{ doc('liquidity_pool_shares') }}"
+      - name: TOKEN_0_CURRENCY
+        description: Token 0 currency
+      - name: TOKEN_0_AMOUNT
+        description: Token 0 amount in pool
+      - name: TOKEN_1_CURRENCY
+        description: Token 1 currency
+      - name: TOKEN_1_AMOUNT
+        description: Token 1 amount in pool

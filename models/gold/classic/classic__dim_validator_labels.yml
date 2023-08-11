@@ -1,0 +1,15 @@
+version: 2
+models:
+  - name: classic__dim_validator_labels
+    descriptions: |-
+      This table records labels for Validator addresses that show up on-chain. These individual addresses are matched based on the public_key of the Validator addresses.
+    columns:
+      - name: LABEL
+        description: "{{ doc('project_name') }}"
+      - name: operator_address
+        description: The validator address (terravaloper).
+      - name: delegator_address
+        description: The delegator address of the Validator (terra).
+      - name: vp_address
+        description: The Validator address used for Voting Power (terravalcons).
+

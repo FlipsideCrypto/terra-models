@@ -1,0 +1,14 @@
+version: 2
+models:
+  - name: classic__dim_tax_rate
+    descriptions: |-
+      This table records the tax ratio for each block. Note: In January 2022 the tax rate on Terra was lowered to 0%.
+    columns:
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: BLOCK_NUMBER
+        description: "{{ doc('block_id')}}"
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      - name: TAX_RATE
+        description: The tax ratio for this block.

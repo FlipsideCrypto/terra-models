@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: classic__ez_transfers
+    description: |-
+      This table records transfers with the following message types: wasm/MsgExecuteContract, bank/MsgMultiSend, bank/MsgSend.
+    columns:
+
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+
+      - name: TX_STATUS
+        description: Transaction status
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+
+      - name: MSG_TYPE
+        description: "{{ doc('message_type') }}"
+  
+      - name: EVENT_AMOUNT
+        description: "{{ doc('amount') }}"
+      
+      - name: EVENT_AMOUNT_USD
+        description: Transfer amount, in USD.
+
+      - name: EVENT_CURRENCY
+        description: "{{ doc('currency') }}"
+
+      - name: EVENT_FROM
+        description: "{{ doc('sender') }}"
+
+      - name: EVENT_TO
+        description: "{{ doc('receiver') }}"
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      
+      - name: EVENT_FROM_LABEL_TYPE
+        description: "See Labels section for details"
+      - name: EVENT_FROM_LABEL_SUBTYPE
+        description: "See Labels section for details"
+      - name: EVENT_FROM_ADDRESS_LABEL
+        description: "See Labels section for details"
+      - name: EVENT_FROM_ADDRESS_NAME
+        description: "See Labels section for details"
+        
+      - name: EVENT_TO_LABEL_TYPE
+        description: "See Labels section for details"
+      - name: EVENT_TO_LABEL_SUBTYPE
+        description: "See Labels section for details"
+      - name: EVENT_TO_ADDRESS_LABEL
+        description: "See Labels section for details"
+      - name: EVENT_TO_ADDRESS_NAME
+        description: "See Labels section for details"

@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: classic__fact_transitions
+    description: |-
+      This table records all the transition events and attributes of the Terra blockchain.
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id')}}"
+      
+      - name: TRANSITION_TYPE
+        description: Transition type
+      
+      - name: INDEX
+        description: Transition index
+
+      - name: EVENT
+        description: The transition event
+
+      - name: EVENT_ATTRIBUTES
+        description: It contains the information for this transition, the format will be JSON array format

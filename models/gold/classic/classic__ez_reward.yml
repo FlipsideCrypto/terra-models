@@ -1,0 +1,69 @@
+version: 2
+models:
+  - name: classic__ez_reward
+    descriptions: |-
+      The table records validator commission rewards and delegator staking rewards claimed on the Terra blockchain. 
+    columns:
+      - name: BLOCKCHAIN
+        description: the blockchain this transaction sit on
+      - name: CHAIN_ID
+        description: the blockchain id for this transaction, in Terra, there are columbus-4 and columbus-5
+        
+      - name: BLOCK_ID
+        description: the block number for this transaction
+        
+      - name: BLOCK_TIMESTAMP
+        description: the timestamp this transaction get generated
+
+      - name: TX_ID
+        description: the unique identifier to find this transaction
+      
+      - name: MSG_INDEX
+        description: "{{ doc('msg_index') }}"
+      
+      - name: TX_STATUS
+        description: Transaction status
+      
+      - name: EVENT_ATTRIBUTES_AMOUNT_INDEX
+        description: "{{ doc('attribute_index') }}"
+      
+      - name: ACTION
+        description: "{{ doc('action') }}"
+        
+      - name: VALIDATOR
+        description: "{{ doc('validator_address') }}"
+      
+      - name: DELEGATOR
+        description: "{{ doc('delegator_address') }}"
+
+      - name: EVENT_AMOUNT
+        description: Amount of token claimed
+
+      - name: PRICE_USD
+        description: Price of token claimed
+
+      - name: EVENT_AMOUNT_USD
+        description: Amount of token claimed, in USD
+
+      - name: CURRENCY
+        description: Currency of token claimed
+      
+      - name: VALIDATOR_LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+      - name: VALIDATOR_LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+      - name: VALIDATOR_ADDRESS_LABEL
+        description: "{{ doc('project_name') }}"
+      - name: VALIDATOR_ADDRESS_NAME
+        description: "{{ doc('label') }}"
+      - name: DELEGATOR_LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+      - name: DELEGATOR_LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+      - name: DELEGATOR_ADDRESS_LABEL
+        description: "{{ doc('project_name') }}"
+      - name: DELEGATOR_ADDRESS_NAME
+        description: "{{ doc('label') }}"
+      
+
+     

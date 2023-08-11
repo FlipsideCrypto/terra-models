@@ -1,0 +1,48 @@
+version: 2
+models:
+  - name: classic__ez_terraswap_lp_actions
+    descriptions: |-
+      This table tracks liquidity provided or withdrawn by liquidity providers (LPs) in Terraswap liquidity pools. 
+    columns:
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+      
+      - name: TX_ID
+        description: the unique identifier to find this transaction 
+      
+      - name: EVENT_TYPE
+        description: "{{ doc('action') }}"
+      
+      - name: SENDER
+        description: "{{ doc('trader') }}"
+
+      - name: POOL_ADDRESS
+        description: "{{ doc('liquidity_pool_address') }}"
+      - name: POOL_NAME
+        description: "{{ doc('label') }}"
+      
+      - name: LP_POOL_ADDRESS
+        description: LP token address
+      - name: LP_POOL_NAME
+        description: LP token name
+      - name: LP_SHARE_AMOUNT
+        description: Share of liquidity pool
+      
+      - name: TOKEN_0_CURRENCY
+        description: Token 0 currency
+      - name: TOKEN_0_AMOUNT
+        description: Token 0 amount
+      - name: TOKEN_0_AMOUNT_USD
+        description: Token 0 amount, in USD
+      - name: TOKEN_1_CURRENCY
+        description: Token 1 currency
+      - name: TOKEN_1_AMOUNT
+        description: Token 1 amount in pool
+      - name: TOKEN_1_AMOUNT_USD
+        description: Token 1 amount, in USD

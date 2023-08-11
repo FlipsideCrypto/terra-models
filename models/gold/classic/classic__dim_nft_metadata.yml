@@ -1,0 +1,36 @@
+version: 2
+models:
+  - name: classic__dim_nft_metadata
+    descriptions: |-
+      This table contains metadata for popular NFTs on the Terra blockchain.
+    columns:
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: commission_rate
+        description: Commission fee when an NFT is sold.
+      - name: contract_address
+        description: "{{ doc('contract_address') }}"
+      - name: contract_name
+        description: "{{ doc('label') }}"
+      - name: created_at_block_id
+        description: "{{ doc('block_id') }}"
+      - name: created_at_timestamp
+        description: "{{ doc('block_timestamp') }}"
+      - name: created_at_tx_id
+        description: "{{ doc('tx_id') }}"
+      - name: creator_address
+        description: "{{ doc('address') }}"
+      - name: creator_name
+        description: "{{ doc('label') }}"
+      - name: image_url
+        description: URL of the image.
+      - name: project_name
+        description: "{{ doc('project_name') }}"
+      - name: token_id
+        description: "{{ doc('token_id') }}"
+      - name: token_metadata
+        description: The token metadata.
+      - name: token_metadata_uri
+        description: The uri that will return the address where the metadata of this specific token is stored.
+      - name: token_name
+        description: "{{ doc('label') }}"
