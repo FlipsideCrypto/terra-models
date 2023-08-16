@@ -44,7 +44,7 @@ models:
 tests:
   terra:
     +severity: warn # default to warn for all tests
-    core:
+    gold:
       +severity: error # but error if a core view is having issues
   +store_failures: true # all tests
 

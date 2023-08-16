@@ -32,7 +32,7 @@ LATERAL FLATTEN(
     input => A.data :result :txs
 ) AS b
 WHERE
-    key = 'block'
+    1 = 1 {# key = 'block' #}
 
 {% if is_incremental() %}
 AND {{ incremental_last_x_days(
