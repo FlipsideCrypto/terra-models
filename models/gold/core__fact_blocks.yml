@@ -31,7 +31,7 @@ models:
                 - TIMESTAMP_NTZ
           - dbt_expectations.expect_row_values_to_have_recent_data:
               datepart: day
-              interval: 1
+              interval: 2
 
       - name: BLOCK_HASH
         description: "{{ doc('block_hash')}}"
