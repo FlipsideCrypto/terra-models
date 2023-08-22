@@ -1,13 +1,11 @@
 version: 2
-models:
-  - name: core__fact_governance_submit_proposal
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - TX_ID
 
+models:
+  - name: core__fact_nft_sales
+    description: "{{ doc('deprecation') }}"
+    tests:
     columns:
-      - name: BLOCK_ID
+      - name: block_id
         description: "{{ doc('block_id') }}"
         tests:
           - not_null
@@ -16,27 +14,31 @@ models:
                 - NUMBER
                 - FLOAT
 
-      - name: BLOCK_TIMESTAMP
+      - name: block_timestamp
         description: "{{ doc('block_timestamp') }}"
         tests:
           - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - TIMESTAMP_NTZ
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: timestamp_ntz
 
-      - name: BLOCKCHAIN
-        description: "{{ doc('blockchain') }}"
+      - name: tx_id
+        description: "{{ doc('tx_id') }}"
         tests:
           - not_null
-          - accepted_values:
-              values:
-                - "terra"
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - STRING
                 - VARCHAR
 
-      - name: CHAIN_ID
+      - name: tx_succeeded
+        description: "{{ doc('tx_succeeded') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - BOOLEAN
+
+      - name: chain_id
         description: "{{ doc('chain_id') }}"
         tests:
           - not_null
@@ -48,29 +50,20 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: TX_ID
-        description: "{{ doc('tx_id') }}"
+      - name: blockchain
+        description: "{{ doc('blockchain') }}"
         tests:
-          - unique
           - not_null
-          - relationships:
-              to: ref('silver__transactions')
-              field: tx_id
+          - accepted_values:
+              values:
+                - "terra"
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - STRING
                 - VARCHAR
 
-      - name: TX_SUCCEEDED
-        description: "{{ doc('tx_succeeded') }}"
-        tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - BOOLEAN
-
-      - name: PROPOSER
-        description: "{{ doc('proposer') }}"
+      - name: purchaser
+        description: "{{ doc('purchaser') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -78,19 +71,37 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: PROPOSAL_ID
-        description: "{{ doc('proposal_id') }}"
+      - name: seller
+        description: "{{ doc('seller') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: sales_amount
+        description: "{{ doc('sales_amount') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - NUMBER
+                - FLOAT
 
-      - name: PROPOSAL_TYPE
-        description: "{{ doc('proposal_type') }}"
+      - name: currency
+        description: "{{ doc('currency') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
-                - VARCHAR
                 - STRING
+                - VARCHAR
+
+      - name: decimals
+        description: "{{ doc('decimal') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER

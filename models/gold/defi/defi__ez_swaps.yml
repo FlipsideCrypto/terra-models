@@ -1,12 +1,11 @@
 version: 2
-
 models:
-  - name: core__fact_nft_sales
-    description: |-
-      This table contains nft sales transactions that happens on various marketplace in the terra2 blockchain
-    tests:
+  - name: defi__ez_swaps
+    descriptions: |-
+      This table records all the swaps of Terra2 blockchain
+
     columns:
-      - name: block_id
+      - name: BLOCK_ID
         description: "{{ doc('block_id') }}"
         tests:
           - not_null
@@ -15,15 +14,16 @@ models:
                 - NUMBER
                 - FLOAT
 
-      - name: block_timestamp
+      - name: BLOCK_TIMESTAMP
         description: "{{ doc('block_timestamp') }}"
         tests:
           - not_null
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: timestamp_ntz
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
 
-      - name: tx_id
-        description: "{{ doc('tx_id') }}"
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -31,15 +31,7 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: tx_succeeded
-        description: "{{ doc('tx_succeeded') }}"
-        tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - BOOLEAN
-
-      - name: chain_id
+      - name: CHAIN_ID
         description: "{{ doc('chain_id') }}"
         tests:
           - not_null
@@ -51,20 +43,8 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: blockchain
-        description: "{{ doc('blockchain') }}"
-        tests:
-          - not_null
-          - accepted_values:
-              values:
-                - "terra"
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - STRING
-                - VARCHAR
-
-      - name: purchaser
-        description: "{{ doc('purchaser') }}"
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -72,8 +52,16 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: seller
-        description: "{{ doc('seller') }}"
+      - name: TX_SUCCEEDED
+        description: "{{ doc('tx_succeeded') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - boolean
+
+      - name: from_currency
+        description: "{{ doc('from_currency') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -81,28 +69,63 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: sales_amount
-        description: "{{ doc('sales_amount') }}"
+      - name: trader
+        description: "{{ doc('trader') }}"
         tests:
           - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: from_amount
+        description: "{{ doc('from_amount') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - decimal
+                - float
+                - NUMBER
+
+      - name: from_decimal
+        description: "{{ doc('from_decimal') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+               column_type_list:
+                 - decimal
+                 - float
+                 - NUMBER
+          
+      - name: to_amount
+        description: "{{ doc('to_amount') }}"
+        tests:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - NUMBER
                 - FLOAT
-
-      - name: currency
-        description: "{{ doc('currency') }}"
+                - DECIMAL
+          
+      - name: to_currency
+        description: "{{ doc('to_currency') }}"
         tests:
-          - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - STRING
                 - VARCHAR
-
-      - name: decimals
-        description: "{{ doc('decimal') }}"
+          
+      - name: to_decimal
+        description: "{{ doc('to_decimal') }}"
         tests:
-          - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
+                - decimal
+                - float
                 - NUMBER
+                
+      - name: pool_ids
+        description: "{{ doc('pool_ids') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR

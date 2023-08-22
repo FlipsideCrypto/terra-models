@@ -1,0 +1,27 @@
+version: 2
+models:
+  - name: core__ez_staking
+    description: "{{ doc('deprecation') }}"
+    columns:
+      - name: ACTION
+        description: "{{ doc('action') }}"
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+      - name: DELEGATOR_ADDRESS
+        description: "{{ doc('delegator_address') }}"
+      - name: AMOUNT
+        description: "{{ doc('amount') }}"
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+      - name: TX_SUCCEEDED
+        description: "{{ doc('tx_succeeded') }}"
+      - name: VALIDATOR_ADDRESS
+        description: "{{ doc('validator_address') }}"
+      - name: VALIDATOR_SRC_ADDRESS
+        description: "{{ doc('validator_src_address') }}"

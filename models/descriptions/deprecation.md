@@ -1,0 +1,4 @@
+{% docs deprecation %}
+
+Deprecating soon: This is a notice that we're replacing this table with <table name>. Please migrate queries to the new table by 9/11/23. There will be no column changes or any other changes of any kind.
+{% enddocs %}

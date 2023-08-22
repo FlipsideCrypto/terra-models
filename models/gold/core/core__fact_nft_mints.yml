@@ -2,8 +2,7 @@ version: 2
 
 models:
   - name: core__fact_nft_mints
-    description: |-
-      This table contains nft mints transactions that happens on various marketplace in the terra2 blockchain
+    description: "{{ doc('deprecation') }}"
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:

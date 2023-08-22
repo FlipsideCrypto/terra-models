@@ -2,8 +2,7 @@ version: 2
 
 models:
   - name: core__fact_governance_votes
-    description: |-
-      This table contains votes cast on governance proposals.
+    description: "{{ doc('deprecation') }}"
 
     columns:
       - name: tx_id
