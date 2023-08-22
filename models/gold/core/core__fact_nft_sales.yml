@@ -2,18 +2,8 @@ version: 2
 
 models:
   - name: core__fact_nft_sales
-    description: "{{ doc('deprecation') }}"
-    tests:
+    description: "Deprecating soon: This is a notice that we're removing this table on 9/11/23."
     columns:
-      - name: block_id
-        description: "{{ doc('block_id') }}"
-        tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - NUMBER
-                - FLOAT
-
       - name: block_timestamp
         description: "{{ doc('block_timestamp') }}"
         tests:

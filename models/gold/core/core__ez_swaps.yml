@@ -1,7 +1,7 @@
 version: 2
 models:
   - name: core__ez_swaps
-    description: "{{ doc('deprecation') }}"
+    description: "Deprecating soon: This is a notice that we're removing this table on 9/11/23."
     columns:
       - name: BLOCK_ID
         description: "{{ doc('block_id') }}"

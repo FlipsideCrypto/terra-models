@@ -1,7 +1,7 @@
 version: 2
 models:
   - name: core__fact_governance_submit_proposal
-    description: "{{ doc('deprecation') }}"
+    description: "Deprecating soon: This is a notice that we're removing this table on 9/11/23."
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:

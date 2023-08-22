@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: core__fact_governance_votes
-    description: "{{ doc('deprecation') }}"
+    description: "Deprecating soon: This is a notice that we're removing this table on 9/11/23."
 
     columns:
       - name: tx_id
