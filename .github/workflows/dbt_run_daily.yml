@@ -27,8 +27,13 @@ jobs:
   called_workflow_template:
     uses: FlipsideCrypto/analytics-workflow-templates/.github/workflows/dbt_run_template.yml@main
     with:
-      dbt_command: >
-        dbt seed; dbt run --exclude tag:classic
+      dbt_command: |
+        dbt seed; 
+        dbt run --exclude tag:classic;
+        dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
+        dbt run -m models/silver/core/silver__blockchain.sql;
+        dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
+        dbt run -m models/silver/core/silver__blockchain.sql;
       environment: workflow_prod
       warehouse: ${{ vars.WAREHOUSE }}
     secrets: inherit 
