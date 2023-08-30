@@ -26,7 +26,7 @@ clean-targets: # directories to be removed by `dbt clean`
 
 on-run-start:
   - "{{create_sps()}}"
-  - "{{create_json_merge()}}"
+  # - "{{create_json_merge()}}"
 
 on-run-end:
   - '{{ apply_meta_as_tags(results) }}'

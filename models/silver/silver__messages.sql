@@ -2,6 +2,7 @@
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp"],
     unique_key = "message_id",
+    enabled = false
 ) }}
 
 WITH txs AS (
@@ -13,7 +14,10 @@ WITH txs AS (
         tx,
         tx_succeeded,
         VALUE :events AS logs,
-        COALESCE(VALUE :msg_index :: NUMBER,0) AS message_index,
+        COALESCE(
+            VALUE :msg_index :: NUMBER,
+            0
+        ) AS message_index,
         tx :body :messages [0] :"@type" :: STRING AS message_type,
         tx :body :messages [message_index] AS message_value,
         _ingested_at,
