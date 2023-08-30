@@ -31,9 +31,21 @@ jobs:
         dbt seed; 
         dbt run --exclude tag:classic;
         dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
-        dbt run -m models/silver/core/silver__blockchain.sql;
+        dbt run -m models/silver/silver__blockchain.sql;
         dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
-        dbt run -m models/silver/core/silver__blockchain.sql;
+        dbt run -m models/silver/silver__blockchain.sql;
+        dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
+        dbt run -m models/silver/silver__blockchain.sql;
+        dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
+        dbt run -m models/silver/silver__blockchain.sql;
+        dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
+        dbt run -m models/silver/silver__blockchain.sql;
+        dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
+        dbt run -m models/silver/silver__blockchain.sql;
+        dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
+        dbt run -m models/silver/silver__blockchain.sql;
+        dbt run -m models/bronze/bronze_api/bronze_api__get_blockchain.sql;
+        dbt run -m models/silver/silver__blockchain.sql;
       environment: workflow_prod
       warehouse: ${{ vars.WAREHOUSE }}
     secrets: inherit 
