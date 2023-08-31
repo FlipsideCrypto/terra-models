@@ -1,7 +1,7 @@
 {{ config(
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp"],
-    unique_key = "message_id",
+    unique_key = "message_id"
 ) }}
 
 WITH txs AS (
@@ -13,7 +13,10 @@ WITH txs AS (
         tx,
         tx_succeeded,
         VALUE :events AS logs,
-        COALESCE(VALUE :msg_index :: NUMBER,0) AS message_index,
+        COALESCE(
+            VALUE :msg_index :: NUMBER,
+            0
+        ) AS message_index,
         tx :body :messages [0] :"@type" :: STRING AS message_type,
         tx :body :messages [message_index] AS message_value,
         _ingested_at,
@@ -163,16 +166,18 @@ window_functions AS (
             message_index,
             event_type
         ) AS currency_obj,
-        json_merge(
-            attribute_obj,
-            currency_obj
-        ) AS final_attrib_obj,
-        _ingested_at,
-        _inserted_timestamp
-    FROM
-        attributes
-        JOIN blocks
-        ON attributes.block_id = blocks.block_id
+        {# json_merge(
+        attribute_obj,
+        currency_obj
+) AS final_attrib_obj,
+#}
+NULL AS final_attrib_obj,
+_ingested_at,
+_inserted_timestamp
+FROM
+    attributes
+    JOIN blocks
+    ON attributes.block_id = blocks.block_id
 ),
 distinct_events_table AS (
     SELECT
