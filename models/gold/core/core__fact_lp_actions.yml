@@ -2,10 +2,7 @@ version: 2
 
 models:
   - name: core__fact_lp_actions
-    description: |-
-      This table contains actions on liquidity pools (LP) that impact liquidity.
-      These include the creation of LP tokens for providing liquidity, and the
-      burning of LP tokens for withdrawing liquidity.
+    description: "Deprecating soon: This is a notice that we're removing this table on 9/11/23."
 
     columns:
       - name: block_id

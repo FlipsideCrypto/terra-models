@@ -1,10 +1,11 @@
 version: 2
 models:
-  version: 2
-models:
-  - name: core__ez_swaps
-    descriptions: |-
-      This table records all the swaps of Terra2 blockchain
+  - name: core__fact_governance_submit_proposal
+    description: "Deprecating soon: This is a notice that we're removing this table on 9/11/23."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - TX_ID
 
     columns:
       - name: BLOCK_ID
@@ -28,6 +29,9 @@ models:
         description: "{{ doc('blockchain') }}"
         tests:
           - not_null
+          - accepted_values:
+              values:
+                - "terra"
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - STRING
@@ -48,7 +52,11 @@ models:
       - name: TX_ID
         description: "{{ doc('tx_id') }}"
         tests:
+          - unique
           - not_null
+          - relationships:
+              to: ref('silver__transactions')
+              field: tx_id
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - STRING
@@ -60,10 +68,10 @@ models:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
-                - boolean
+                - BOOLEAN
 
-      - name: from_currency
-        description: "{{ doc('from_currency') }}"
+      - name: PROPOSER
+        description: "{{ doc('proposer') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -71,63 +79,19 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: trader
-        description: "{{ doc('trader') }}"
+      - name: PROPOSAL_ID
+        description: "{{ doc('proposal_id') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
-                - STRING
-                - VARCHAR
-
-      - name: from_amount
-        description: "{{ doc('from_amount') }}"
-        tests:
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - decimal
-                - float
                 - NUMBER
 
-      - name: from_decimal
-        description: "{{ doc('from_decimal') }}"
+      - name: PROPOSAL_TYPE
+        description: "{{ doc('proposal_type') }}"
         tests:
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-               column_type_list:
-                 - decimal
-                 - float
-                 - NUMBER
-          
-      - name: to_amount
-        description: "{{ doc('to_amount') }}"
-        tests:
+          - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
-                - NUMBER
-                - FLOAT
-                - DECIMAL
-          
-      - name: to_currency
-        description: "{{ doc('to_currency') }}"
-        tests:
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - STRING
                 - VARCHAR
-          
-      - name: to_decimal
-        description: "{{ doc('to_decimal') }}"
-        tests:
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - decimal
-                - float
-                - NUMBER
-                
-      - name: pool_ids
-        description: "{{ doc('pool_ids') }}"
-        tests:
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
                 - STRING
-                - VARCHAR

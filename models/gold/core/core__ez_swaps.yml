@@ -1,0 +1,46 @@
+version: 2
+models:
+  - name: core__ez_swaps
+    description: "Deprecating soon: This is a notice that we're removing this table on 9/11/23."
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+
+      - name: TX_SUCCEEDED
+        description: "{{ doc('tx_succeeded') }}"
+
+      - name: from_currency
+        description: "{{ doc('from_currency') }}"
+
+      - name: trader
+        description: "{{ doc('trader') }}"
+
+      - name: from_amount
+        description: "{{ doc('from_amount') }}"
+
+      - name: from_decimal
+        description: "{{ doc('from_decimal') }}"
+          
+      - name: to_amount
+        description: "{{ doc('to_amount') }}"
+          
+      - name: to_currency
+        description: "{{ doc('to_currency') }}"
+          
+      - name: to_decimal
+        description: "{{ doc('to_decimal') }}"
+                
+      - name: pool_ids
+        description: "{{ doc('pool_ids') }}"

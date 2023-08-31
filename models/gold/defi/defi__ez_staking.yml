@@ -1,6 +1,6 @@
 version: 2
 models:
-  - name: core__ez_staking
+  - name: defi__ez_staking
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
