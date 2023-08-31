@@ -171,7 +171,7 @@ window_functions AS (
         currency_obj
 ) AS final_attrib_obj,
 #}
-NULL AS AS final_attrib_obj,
+NULL AS final_attrib_obj,
 _ingested_at,
 _inserted_timestamp
 FROM
