@@ -16,7 +16,7 @@ WITH labels AS (
         system_created_at AS _inserted_timestamp
     FROM
         {{ source(
-            'labels_v2',
+            'crosschain_silver',
             'address_labels'
         ) }}
     WHERE

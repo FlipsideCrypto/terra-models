@@ -7,7 +7,7 @@ WITH min_block AS (
 
     SELECT
         ethereum.streamline.udf_json_rpc_call(
-            'https://terra-rpc.polkachu.com/',{},
+            'https://terra-rpc.publicnode.com/',{},
             ARRAY_AGG(
                 { 'jsonrpc': '2.0',
                 'id': 0,
@@ -119,7 +119,7 @@ calls AS (
 SELECT
     call,
     ethereum.streamline.udf_json_rpc_call(
-        'https://terra-rpc.polkachu.com/',{},
+        'https://terra-rpc.publicnode.com/',{},
         call
     ) AS DATA,
     SYSDATE() AS _inserted_timestamp

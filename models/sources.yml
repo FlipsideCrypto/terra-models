@@ -61,11 +61,12 @@ sources:
             description: The time this row was ingested by Chainwalkers
           - name: _inserted_timestamp
             description: The time this row was inserted into Snowflake
-  - name: labels_v2
+  - name: crosschain_silver
     schema: silver
     database: crosschain
     tables:
       - name: address_labels
+      - name: number_sequence
   - name: bronze
     schema: bronze
     database: terra
