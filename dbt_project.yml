@@ -42,7 +42,7 @@ models:
   +on_schema_change: "append_new_columns"
 
 tests:
-  terra:
+  terra_models:
     +severity: warn # default to warn for all tests
     gold:
       +severity: error # but error if a core view is having issues
