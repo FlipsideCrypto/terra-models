@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: core__fact_msg_attribute_standard
+  - name: core__fact_msg_attributes_standard
     description: |-
       This table contains all the messages attributes of each transaction event of the Terra2 blockchain.
 
