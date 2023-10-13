@@ -15,3 +15,5 @@ SELECT
     deployment_tx_id
 FROM
     {{ ref('silver__address_labels') }}
+WHERE
+    address IS NOT NULL

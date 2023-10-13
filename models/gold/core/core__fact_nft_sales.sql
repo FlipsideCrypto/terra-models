@@ -1,6 +1,7 @@
 {{ config(
     materialized = 'view',
-    secure = true
+    secure = true,
+    enabled = false
 ) }}
 
 WITH nft_sales AS (

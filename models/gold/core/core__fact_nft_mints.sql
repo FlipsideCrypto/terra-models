@@ -1,6 +1,7 @@
 {{ config(
     materialized = 'view',
-    secure = true
+    secure = true,
+    enabled = false
 ) }}
 
 WITH nft_mints AS (
@@ -10,8 +11,7 @@ WITH nft_mints AS (
     FROM
         {{ ref('silver__nft_mints') }}
 )
-
-select
+SELECT
     block_id,
     block_timestamp,
     blockchain,
@@ -25,4 +25,5 @@ select
     currency,
     decimals,
     mint_id
-from nft_mints
+FROM
+    nft_mints

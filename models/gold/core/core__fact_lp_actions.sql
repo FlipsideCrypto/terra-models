@@ -1,6 +1,7 @@
 {{ config(
     materialized = 'view',
-    secure = true
+    secure = true,
+    enabled = false
 ) }}
 
 WITH lp_actions AS (
@@ -10,8 +11,7 @@ WITH lp_actions AS (
     FROM
         {{ ref('silver__lp_actions') }}
 )
-
-select 
+SELECT
     block_id,
     block_timestamp,
     action_id,
@@ -25,5 +25,5 @@ select
     amount,
     currency,
     decimals
-from
+FROM
     lp_actions

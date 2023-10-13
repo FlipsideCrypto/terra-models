@@ -1,9 +1,11 @@
 {{ config(
-    materialized = 'view'
+    materialized = 'view',
+    enabled = false
 ) }}
 
-with governance_votes as (
-    select
+WITH governance_votes AS (
+
+    SELECT
         tx_id,
         block_id,
         block_timestamp,
@@ -15,7 +17,10 @@ with governance_votes as (
         vote_option_text,
         vote_weight,
         tx_succeeded
-    from {{ ref('silver__governance_votes') }}
+    FROM
+        {{ ref('silver__governance_votes') }}
 )
-
-select * from governance_votes
+SELECT
+    *
+FROM
+    governance_votes

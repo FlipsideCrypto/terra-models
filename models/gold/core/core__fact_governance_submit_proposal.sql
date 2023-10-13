@@ -1,5 +1,6 @@
 {{ config(
-    materialized = 'view'
+    materialized = 'view',
+    enabled = false
 ) }}
 
 WITH governance_submit_proposal AS (

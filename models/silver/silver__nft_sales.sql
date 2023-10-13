@@ -2,6 +2,7 @@
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp"],
     unique_key = "unique_id",
+    enabled = false
 ) }}
 
 WITH msg AS (

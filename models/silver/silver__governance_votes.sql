@@ -1,11 +1,13 @@
 {{ config(
     materialized = 'incremental',
     unique_key = 'tx_id',
-    incremental_strategy = 'delete+insert'
+    incremental_strategy = 'delete+insert',
+    enabled = false
 ) }}
 
-with base_votes as (
-    select
+WITH base_votes AS (
+
+    SELECT
         tx_id,
         block_id,
         block_timestamp,
@@ -13,36 +15,40 @@ with base_votes as (
         chain_id,
         attributes,
         _inserted_timestamp
-    from {{ ref('silver__messages') }}
-    where message_type = '/cosmos.gov.v1beta1.MsgVote'
-      and {{ incremental_load_filter('_inserted_timestamp') }}
+    FROM
+        {{ ref('silver__messages') }}
+    WHERE
+        message_type = '/cosmos.gov.v1beta1.MsgVote'
+        AND {{ incremental_load_filter('_inserted_timestamp') }}
 ),
-
-parsed_votes as (
-    select
+parsed_votes AS (
+    SELECT
         tx_id,
         block_id,
         block_timestamp,
         tx_succeeded,
         chain_id,
-        attributes:message:sender::text as voter,
-        attributes:proposal_vote:proposal_id::number as proposal_id,
-        parse_json(attributes:proposal_vote:option) as parsed_vote_option,
-        parsed_vote_option:option::number as vote_option,
-        case vote_option
-            when 1 then 'Yes' 
-            when 2 then 'Abstain'
-            when 3 then 'No'
-            when 4 then 'NoWithVeto'
-        end as vote_option_text,
-        parsed_vote_option:weight::number as vote_weight,
-        'terra' as blockchain,
+        attributes :message :sender :: text AS voter,
+        attributes :proposal_vote :proposal_id :: NUMBER AS proposal_id,
+        PARSE_JSON(
+            attributes :proposal_vote :option
+        ) AS parsed_vote_option,
+        parsed_vote_option :option :: NUMBER AS vote_option,
+        CASE
+            vote_option
+            WHEN 1 THEN 'Yes'
+            WHEN 2 THEN 'Abstain'
+            WHEN 3 THEN 'No'
+            WHEN 4 THEN 'NoWithVeto'
+        END AS vote_option_text,
+        parsed_vote_option :weight :: NUMBER AS vote_weight,
+        'terra' AS blockchain,
         _inserted_timestamp
-    from base_votes
+    FROM
+        base_votes
 ),
-
-final as (
-    select
+FINAL AS (
+    SELECT
         tx_id,
         block_id,
         block_timestamp,
@@ -55,7 +61,10 @@ final as (
         vote_weight,
         tx_succeeded,
         _inserted_timestamp
-    from parsed_votes
+    FROM
+        parsed_votes
 )
-
-select * from final
+SELECT
+    *
+FROM
+    FINAL
