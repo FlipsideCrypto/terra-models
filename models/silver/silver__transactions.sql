@@ -127,10 +127,16 @@ silver_txs AS (
             )
             ELSE NULL
         END AS authorizer_public_key,
-        TRY_BASE64_DECODE_STRING(
+        COALESCE(
+            TRY_BASE64_DECODE_STRING(
+                tx :tx_result :events [0] :attributes [0] :key
+            ),
             tx :tx_result :events [0] :attributes [0] :key
         ) AS msg0_key,
-        TRY_BASE64_DECODE_STRING(
+        COALESCE(
+            TRY_BASE64_DECODE_STRING(
+                tx :tx_result :events [0] :attributes [0] :value
+            ),
             tx :tx_result :events [0] :attributes [0] :value
         ) AS msg0_value,
         CASE
@@ -145,7 +151,10 @@ silver_txs AS (
             WHEN block_id <= 4711778 THEN tx :auth_info :fee :payer :: STRING
             ELSE NULL
         END AS tx_payer,
-        TRY_BASE64_DECODE_STRING(
+        COALESCE(
+            TRY_BASE64_DECODE_STRING(
+                tx :tx_result :events [1] :attributes [0] :value
+            ),
             tx :tx_result :events [1] :attributes [0] :value
         ) AS acc_seq,
         CASE
