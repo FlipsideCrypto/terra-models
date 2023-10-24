@@ -17,23 +17,35 @@ WITH b AS (
     VALUE :type :: STRING AS msg_type,
     VALUE AS msg,
     IFF(
-      TRY_BASE64_DECODE_STRING(
+      COALESCE(
+        TRY_BASE64_DECODE_STRING(
+          msg :attributes [0] :key :: STRING
+        ),
         msg :attributes [0] :key :: STRING
       ) = 'action',
       TRUE,
       FALSE
     ) AS is_action,
     IFF(
-      TRY_BASE64_DECODE_STRING(
+      COALESCE(
+        TRY_BASE64_DECODE_STRING(
+          msg :attributes [0] :key :: STRING
+        ),
         msg :attributes [0] :key :: STRING
       ) = 'module',
       TRUE,
       FALSE
     ) AS is_module,
-    TRY_BASE64_DECODE_STRING(
+    COALESCE(
+      TRY_BASE64_DECODE_STRING(
+        msg :attributes [0] :key :: STRING
+      ),
       msg :attributes [0] :key :: STRING
     ) attribute_key,
-    TRY_BASE64_DECODE_STRING(
+    COALESCE(
+      TRY_BASE64_DECODE_STRING(
+        msg :attributes [0] :value :: STRING
+      ),
       msg :attributes [0] :value :: STRING
     ) attribute_value,
     _inserted_timestamp
