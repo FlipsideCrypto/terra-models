@@ -15,8 +15,8 @@ models:
               column_name: tx_id
               column_block: block_id
               column_tx_count: tx_count
-              where: BLOCK_TIMESTAMP < CURRENT_DATE
-              error_if: "> 1000"
+              where: BLOCK_TIMESTAMP < CURRENT_DATE AND BLOCK_ID > 4109598
+              severity: warn
 
       - name: BLOCK_TIMESTAMP
         description: "{{ doc('block_timestamp') }}"

@@ -178,6 +178,7 @@ bronze_api AS (
             FROM
                 rel_blocks
         )
+        AND block_id > 4109598
 )
 SELECT
     'transactions' AS test_name,

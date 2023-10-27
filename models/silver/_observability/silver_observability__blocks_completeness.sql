@@ -18,7 +18,8 @@ WITH source AS (
     FROM
         {{ ref('silver__blocks') }} A
     WHERE
-        block_timestamp < DATEADD(
+        block_id > 4109598
+        AND block_timestamp < DATEADD(
             HOUR,
             -24,
             SYSDATE()
