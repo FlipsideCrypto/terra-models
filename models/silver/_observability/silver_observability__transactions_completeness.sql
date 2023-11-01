@@ -99,6 +99,15 @@ OR {% if var('OBSERV_FULL_TEST') %}
     ) IS NOT NULL
 {% endif %}
 {% endif %}
+UNION ALL
+SELECT
+    block_id,
+    block_id AS block_id_requested,
+    block_timestamp,
+    tx_id,
+    _inserted_timestamp
+FROM
+    {{ ref('silver___manual_tx_lq') }}
 ),
 b_block AS (
     SELECT

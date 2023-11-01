@@ -8,7 +8,7 @@
     FROM
         (
             SELECT
-                ethereum.streamline.udf_api(
+                live.udf_api(
                     'GET',
                     'https://terra-rpc.polkachu.com/abci_info',{},{}
                 ) DATA
@@ -75,7 +75,7 @@ INSERT INTO
     ),
     results AS (
         SELECT
-            ethereum.streamline.udf_json_rpc_call(
+            live.udf_json_rpc_call(
                 'https://terra-rpc.polkachu.com/',{},
                 calls
             ) DATA
@@ -101,7 +101,7 @@ FROM
 {% endset %}
     {% do run_query(load_query) %}
     {% set wait %}
-    CALL system$wait(10);
+    CALL system $ wait(10);
 {% endset %}
     {% do run_query(wait) %}
 {% endmacro %}

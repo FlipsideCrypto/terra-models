@@ -195,6 +195,38 @@ silver_txs AS (
         _inserted_timestamp
     FROM
         bronze_txs
+
+{% if is_incremental() %}
+{% else %}
+    UNION ALL
+    SELECT
+        tx_id,
+        block_id,
+        block_timestamp,
+        NULL AS blockchain,
+        auth_type,
+        authorizer_public_key :: ARRAY AS authorizer_public_key,
+        msg0_key,
+        msg0_value,
+        tx_grantee,
+        tx_granter,
+        tx_payer,
+        acc_seq,
+        tx_sender,
+        gas_limit,
+        gas_used,
+        fee_raw,
+        fee_denom,
+        memo,
+        NULL AS tx_code,
+        tx_succeeded,
+        codespace,
+        tx,
+        _ingested_at,
+        _inserted_timestamp
+    FROM
+        {{ ref('silver___manual_tx_lq') }}
+    {% endif %}
 )
 SELECT
     A.tx_id,
