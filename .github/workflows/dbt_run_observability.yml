@@ -3,8 +3,8 @@ run-name: dbt_run_observability
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '15 0,4,8,12,17,20 * * *'
+  # schedule:
+  #   - cron: '15 0,4,8,12,17,20 * * *'
 
 env:
   USE_VARS: "${{ vars.USE_VARS }}"

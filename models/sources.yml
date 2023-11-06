@@ -99,3 +99,8 @@ sources:
     schema: core
     tables:
       - name: dim_date_hours
+  - name: github_actions
+    database: terra
+    schema: github_actions
+    tables:
+      - name: workflows

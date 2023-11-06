@@ -3,9 +3,9 @@ run-name: dbt_run_streamline
 
 on:
   workflow_dispatch:
-  schedule:
-    # Runs "every hour at the 0,30 minute" (see https://crontab.guru)
-    - cron: '0,30 */1 * * *'
+  # schedule:
+  #   # Runs "every hour at the 0,30 minute" (see https://crontab.guru)
+  #   - cron: '0,30 */1 * * *'
     
 env:
   USE_VARS: "${{ vars.USE_VARS }}"
