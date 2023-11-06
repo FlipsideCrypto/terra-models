@@ -1,7 +1,8 @@
 {{ config(
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp"],
-    unique_key = "message_id"
+    unique_key = "message_id",
+    tags = ' ["run_now"]'
 ) }}
 
 WITH txs AS (
@@ -166,18 +167,17 @@ window_functions AS (
             message_index,
             event_type
         ) AS currency_obj,
-        {# json_merge(
-        attribute_obj,
-        currency_obj
-) AS final_attrib_obj,
-#}
-NULL AS final_attrib_obj,
-_ingested_at,
-_inserted_timestamp
-FROM
-    attributes
-    JOIN blocks
-    ON attributes.block_id = blocks.block_id
+        json_merge(
+            attribute_obj,
+            currency_obj
+        ) AS final_attrib_obj,
+        {# NULL AS final_attrib_obj, #}
+        _ingested_at,
+        _inserted_timestamp
+    FROM
+        attributes
+        JOIN blocks
+        ON attributes.block_id = blocks.block_id
 ),
 distinct_events_table AS (
     SELECT
