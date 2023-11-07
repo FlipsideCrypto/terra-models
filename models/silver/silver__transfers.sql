@@ -1,142 +1,140 @@
 {{ config(
-    materialized = "incremental",
-    cluster_by = ["_inserted_timestamp"],
-    unique_key = "transfer_id",
+    materialized = 'incremental',
+    unique_key = ['tx_id','msg_index'],
+    incremental_strategy = 'merge',
+    cluster_by = ['block_timestamp::DATE']
 ) }}
 
-WITH flattened_attributes AS (
+WITH base_atts AS (
 
     SELECT
         block_id,
         block_timestamp,
         tx_id,
         tx_succeeded,
-        chain_id,
-        message_value,
-        message_type,
-        message_index,
-        REGEXP_SUBSTR(
-            key,
-            '[0-9]+'
-        ) :: NUMBER AS key_index,
-        CASE
-            WHEN path LIKE 'amount%' THEN VALUE :: STRING
-            ELSE NULL
-        END AS amount,
-        CASE
-            WHEN path LIKE 'sender%' THEN VALUE :: STRING
-            ELSE NULL
-        END AS sender,
-        CASE
-            WHEN path LIKE 'currency%' THEN VALUE :: STRING
-            ELSE NULL
-        END AS currency,
-        CASE
-            WHEN path LIKE 'recipient%' THEN VALUE :: STRING
-            ELSE NULL
-        END AS receiver,
-        _ingested_at,
+        msg_group,
+        msg_sub_group,
+        msg_index,
+        msg_type,
+        attribute_key,
+        attribute_value,
         _inserted_timestamp
     FROM
-        {{ ref("silver__messages") }},
-        LATERAL FLATTEN(
-            input => attributes :transfer,
-            outer => TRUE
-        )
+        {{ ref('silver__msg_attributes_2') }}
     WHERE
-        attributes :transfer IS NOT NULL
-),
-unpivoted_table AS (
-    SELECT
-        *
-    FROM
-        flattened_attributes unpivot(
-            VALUE for key IN (
-                sender,
-                amount,
-                currency,
-                receiver
-            )
+        msg_type IN (
+            'tx',
+            'transfer'
         )
-),
-pivoted_table AS (
+
+{% if is_incremental() %}
+AND _inserted_timestamp >= (
     SELECT
-        *
-    FROM
-        unpivoted_table pivot(MAX(VALUE) for key IN ('AMOUNT', 'CURRENCY', 'SENDER', 'RECEIVER')) AS p (
-            block_id,
-            block_timestamp,
-            tx_id,
-            tx_succeeded,
-            chain_id,
-            message_value,
-            message_type,
-            message_index,
-            key_index,
-            _ingested_at,
-            _inserted_timestamp,
-            amount,
-            currency,
-            sender,
-            receiver
+        MAX(
+            _inserted_timestamp
         )
+    FROM
+        {{ this }}
+)
+{% endif %}
 ),
-final_table AS (
+all_transfers AS (
     SELECT
         block_id,
         block_timestamp,
         tx_id,
         tx_succeeded,
-        chain_id,
-        message_value,
-        message_type,
-        message_index,
-        amount,
-        currency,
-        sender,
-        receiver,
-        ROW_NUMBER() over (
-            PARTITION BY tx_id
-            ORDER BY
-                block_timestamp
-        ) - 1 AS INDEX,
-        CONCAT(
-            tx_id,
-            '_',
-            INDEX
-        ) AS transfer_id,
-        REGEXP_SUBSTR(
-            message_type,
-            '(([^./]+)(/.\.|))',
-            1,
-            '1'
-        ) AS blockchain,
-        CASE
-            WHEN message_type LIKE '/ibc%' THEN 'IBC_Transfer_In'
-            ELSE 'IBC_Transfer_Off'
-        END AS transfer_type,
-        _ingested_at,
-        _inserted_timestamp
+        msg_group,
+        msg_sub_group,
+        msg_index,
+        _inserted_timestamp,
+        OBJECT_AGG(
+            attribute_key :: STRING,
+            attribute_value :: variant
+        ) AS j,
+        j :sender :: STRING AS sender,
+        j :recipient :: STRING AS recipient,
+        j :amount :: STRING AS amount
     FROM
-        pivoted_table
+        base_atts
+    WHERE
+        msg_type = 'transfer'
+    GROUP BY
+        block_id,
+        block_timestamp,
+        tx_id,
+        tx_succeeded,
+        msg_group,
+        msg_sub_group,
+        msg_index,
+        _inserted_timestamp
+),
+sender AS (
+    SELECT
+        tx_id,
+        SPLIT_PART(
+            attribute_value,
+            '/',
+            0
+        ) AS sender
+    FROM
+        base_atts
+    WHERE
+        msg_type = 'tx'
+        AND attribute_key = 'acc_seq' qualify(ROW_NUMBER() over(PARTITION BY tx_id
+    ORDER BY
+        msg_index)) = 1
+),
+new_fin AS (
+    SELECT
+        A.block_id,
+        A.block_timestamp,
+        A.tx_id,
+        A.tx_succeeded,
+        A.msg_group,
+        A.msg_sub_group,
+        A.msg_index,
+        A._inserted_timestamp,
+        COALESCE(
+            A.sender,
+            s.sender
+        ) AS sender,
+        A.recipient AS receiver,
+        A.amount,
+        SPLIT_PART(
+            TRIM(
+                REGEXP_REPLACE(
+                    A.amount,
+                    '[^[:digit:]]',
+                    ' '
+                )
+            ),
+            ' ',
+            0
+        ) AS amount_INT,
+        RIGHT(A.amount, LENGTH(A.amount) - LENGTH(SPLIT_PART(TRIM(REGEXP_REPLACE(A.amount, '[^[:digit:]]', ' ')), ' ', 0))) AS currency
+    FROM
+        all_transfers A
+        JOIN sender s
+        ON A.tx_id = s.tx_id
 )
 SELECT
     block_id,
     block_timestamp,
     tx_id,
-    transfer_id,
     tx_succeeded,
-    chain_id,
-    message_value,
-    message_type,
-    message_index,
-    amount,
-    currency,
+    'TERRA' AS transfer_type,
+    msg_index,
     sender,
-    receiver,
-    blockchain,
-    transfer_type,
-    _ingested_at,
+    receiver AS receiver,
+    TRY_CAST(
+        amount_int AS INT
+    ) AS amount,
+    currency,
     _inserted_timestamp
 FROM
-    final_table
+    new_fin
+WHERE
+    TRY_CAST(
+        amount_int AS INT
+    ) IS NOT NULL

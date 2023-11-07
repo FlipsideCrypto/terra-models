@@ -1,6 +1,6 @@
 version: 2
 models:
-  - name: silver__transfers
+  - name: silver__transfers_ibc
     description: Records of all transfers on Sei, including IBC transfers as on- and off-ramps to Sei and wallet to wallet transfers
     tests:
       - dbt_utils.unique_combination_of_columns:

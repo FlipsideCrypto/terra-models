@@ -3,28 +3,48 @@
     secure = true
 ) }}
 
-WITH transfers AS (
-
-    SELECT
-        *
-    FROM
-        {{ ref('silver__transfers') }}
-)
 SELECT
     block_id,
     block_timestamp,
     tx_id,
-    transfer_id,
+    CONCAT(
+        tx_id,
+        '_',
+        msg_index
+    ) AS transfer_id,
     tx_succeeded,
-    chain_id,
-    message_value,
-    message_type,
-    message_index,
+    NULL AS chain_id,
+    NULL AS message_value,
+    NULL AS message_type,
+    msg_index AS message_index,
     amount,
     currency,
     sender,
     receiver,
-    blockchain,
+    'terra' blockchain,
     transfer_type
 FROM
-    transfers
+    {{ ref('silver__transfers') }}
+UNION ALL
+SELECT
+    block_id,
+    block_timestamp,
+    tx_id,
+    CONCAT(
+        tx_id,
+        '_',
+        msg_index
+    ) AS transfer_id,
+    tx_succeeded,
+    NULL AS chain_id,
+    NULL AS message_value,
+    NULL AS message_type,
+    msg_index AS message_index,
+    amount,
+    currency,
+    sender,
+    receiver,
+    'terra' blockchain,
+    transfer_type
+FROM
+    {{ ref('silver__transfers_ibc') }}
