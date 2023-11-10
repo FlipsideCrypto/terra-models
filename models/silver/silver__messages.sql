@@ -1,8 +1,8 @@
 {{ config(
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp"],
-    unique_key = "message_id",
-    tags = ' ["run_now"]'
+    unique_key = "message_id",,
+    tags = ['core']
 ) }}
 
 WITH txs AS (

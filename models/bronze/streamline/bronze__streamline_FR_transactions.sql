@@ -1,5 +1,6 @@
 {{ config (
-    materialized = 'view'
+    materialized = 'view',
+    tags = ['core']
 ) }}
 {{ streamline_external_table_FR_query(
     "transactions",

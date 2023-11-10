@@ -1,5 +1,6 @@
 {{ config (
-    materialized = 'view'
+    materialized = 'view',
+    tags = ['core']
 ) }}
 
 WITH lq_base AS (

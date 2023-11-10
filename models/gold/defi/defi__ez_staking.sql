@@ -1,6 +1,6 @@
 {{ config(
    materialized = "view",
-   secure = true
+   tags = ['core']
 ) }}
 
 WITH staking AS (

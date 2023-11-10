@@ -1,8 +1,16 @@
-{{ config(materialized="view", secure=true) }}
+{{ config(
+    materialized = "view",
+    tags = ['core']
+) }}
 
-with swap as (select * from {{ ref("silver__dex_swaps") }})
+WITH swap AS (
 
-select
+    SELECT
+        *
+    FROM
+        {{ ref("silver__dex_swaps") }}
+)
+SELECT
     block_id,
     block_timestamp,
     blockchain,
@@ -15,7 +23,7 @@ select
     from_decimal,
     to_amount,
     to_currency,
-    to_decimal,
+    TO_DECIMAL,
     pool_id
-
-from swap
+FROM
+    swap

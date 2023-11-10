@@ -2,6 +2,7 @@
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp::DATE"],
     unique_key = "address",
+    tags = ['noncore']
 ) }}
 
 WITH token_labels AS (
@@ -26,7 +27,7 @@ WITH token_labels AS (
         AND {{ incremental_load_filter("_inserted_timestamp") }}
 )
 SELECT
-    'terra' as blockchain,
+    'terra' AS blockchain,
     block_timestamp,
     tx_id,
     label,

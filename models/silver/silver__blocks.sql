@@ -3,6 +3,7 @@
     unique_key = 'block_id',
     incremental_strategy = 'delete+insert',
     cluster_by = ['block_timestamp::DATE', '_inserted_timestamp::DATE'],
+    tags = ['core']
 ) }}
 -- depends_on: {{ ref('bronze__streamline_blocks') }}
 -- depends_on: {{ ref('bronze__streamline_FR_blocks') }}
