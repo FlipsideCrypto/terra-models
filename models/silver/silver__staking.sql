@@ -253,8 +253,7 @@ prefinal AS (
         ) A
         JOIN sendr b
         ON A.tx_id = b.tx_id
-        AND A.msg_group = b.msg_group
-        AND A.msg_index + 1 = b.msg_index
+        AND A.msg_group = b.msg_group {# AND A.msg_index + 1 = b.msg_index #}
         JOIN valid C
         ON A.tx_id = C.tx_id
         AND A.msg_group = C.msg_group
