@@ -2,6 +2,7 @@
     materialized = 'incremental',
     cluster_by = ['_inserted_timestamp::DATE'],
     unique_key = 'tx_id',
+    merge_exclude_columns = ["inserted_timestamp"],
     tags = ['core']
 ) }}
 -- depends_on: {{ ref('bronze__streamline_transactions') }}
@@ -249,7 +250,13 @@ SELECT
     A.tx_succeeded,
     A.tx,
     A._ingested_at,
-    A._inserted_timestamp
+    A._inserted_timestamp,
+    {{ dbt_utils.generate_surrogate_key(
+        ['a.tx_id']
+    ) }} AS transactions_id,
+    SYSDATE() AS inserted_timestamp,
+    SYSDATE() AS modified_timestamp,
+    '{{ invocation_id }}' AS _invocation_id
 FROM
     silver_txs A
     JOIN silver_blocks b

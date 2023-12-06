@@ -2,6 +2,7 @@
   materialized = "incremental",
   cluster_by = ["_inserted_timestamp"],
   unique_key = "message_id",
+  merge_exclude_columns = ["inserted_timestamp"],
   incremental_strategy = 'delete+insert',
   tags = ['core']
 ) }}
@@ -223,7 +224,13 @@ FINAL AS (
     attribute_key,
     attribute_value,
     _ingested_at,
-    _inserted_timestamp
+    _inserted_timestamp,
+    {{ dbt_utils.generate_surrogate_key(
+      ['message_id']
+    ) }} AS msg_attributes_id,
+    SYSDATE() AS inserted_timestamp,
+    SYSDATE() AS modified_timestamp,
+    '{{ invocation_id }}' AS _invocation_id
   FROM
     msg_attribute
 )

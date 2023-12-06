@@ -1,6 +1,6 @@
 {{ config(
     materialized = 'view',
-    secure = true
+    tags = ['core']
 ) }}
 
 WITH blocks AS (
@@ -10,8 +10,7 @@ WITH blocks AS (
     FROM
         {{ ref('silver__blocks') }}
 ),
-final AS (
-
+FINAL AS (
     SELECT
         block_id,
         block_timestamp,
@@ -30,9 +29,25 @@ final AS (
         next_validators_hash,
         proposer_address,
         validators_hash,
-        validator_address_array
+        validator_address_array,
+        COALESCE (
+            blocks_id,
+            {{ dbt_utils.generate_surrogate_key(
+                ['block_id']
+            ) }}
+        ) AS fact_blocks_id,
+        COALESCE(
+            inserted_timestamp,
+            '2000-01-01'
+        ) AS inserted_timestamp,
+        COALESCE(
+            modified_timestamp,
+            '2000-01-01'
+        ) AS modified_timestamp
     FROM
         blocks
 )
-
-SELECT * FROM final
+SELECT
+    *
+FROM
+    FINAL

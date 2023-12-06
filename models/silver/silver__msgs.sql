@@ -191,7 +191,13 @@ FINAL AS (
     msg_type,
     msg,
     _ingested_at,
-    _inserted_timestamp
+    _inserted_timestamp,
+    {{ dbt_utils.generate_surrogate_key(
+      ['message_id']
+    ) }} AS msgs_id,
+    SYSDATE() AS inserted_timestamp,
+    SYSDATE() AS modified_timestamp,
+    '{{ invocation_id }}' AS _invocation_id
   FROM
     prefinal
 )

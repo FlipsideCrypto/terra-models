@@ -1,6 +1,7 @@
 {{ config(
     materialized = "view",
-    tags = ['core']
+    tags = ['core'],
+    enabled = false
 ) }}
 
 WITH swap AS (

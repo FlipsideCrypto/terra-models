@@ -2,6 +2,7 @@
     materialized = 'incremental',
     unique_key = "staking_id",
     incremental_strategy = 'merge',
+    merge_exclude_columns = ["inserted_timestamp"],
     cluster_by = ['block_timestamp::DATE'],
     tags = ['noncore']
 ) }}
@@ -375,6 +376,12 @@ SELECT
     A.validator_address,
     A.redelegate_source_validator_address AS validator_src_address,
     A.completion_time,
-    A._inserted_timestamp
+    A._inserted_timestamp,
+    {{ dbt_utils.generate_surrogate_key(
+        ['staking_id']
+    ) }} AS stakings_id,
+    SYSDATE() AS inserted_timestamp,
+    SYSDATE() AS modified_timestamp,
+    '{{ invocation_id }}' AS _invocation_id
 FROM
     add_dec A

@@ -1,6 +1,6 @@
 {{ config(
   materialized = 'view',
-  secure = true
+  tags = ['core']
 ) }}
 
 WITH msg_attributes AS (
@@ -21,6 +21,20 @@ SELECT
   msg_type,
   attribute_index,
   attribute_key,
-  attribute_value
+  attribute_value,
+  COALESCE (
+    msg_attributes_2_id,
+    {{ dbt_utils.generate_surrogate_key(
+      ['_unique_key']
+    ) }}
+  ) AS fact_msg_attributes_standard_id,
+  COALESCE(
+    inserted_timestamp,
+    '2000-01-01'
+  ) AS inserted_timestamp,
+  COALESCE(
+    modified_timestamp,
+    '2000-01-01'
+  ) AS modified_timestamp
 FROM
   msg_attributes

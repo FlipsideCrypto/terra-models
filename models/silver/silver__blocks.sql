@@ -157,7 +157,13 @@ FINAL AS (
         base_blocks.header :validators_hash :: STRING AS validators_hash,
         base_blocks._inserted_timestamp AS _ingested_at,
         base_blocks._inserted_timestamp AS _inserted_timestamp,
-        validators_address_array.validator_address_array :: ARRAY AS validator_address_array
+        validators_address_array.validator_address_array :: ARRAY AS validator_address_array,
+        {{ dbt_utils.generate_surrogate_key(
+            ['base_blocks.block_id']
+        ) }} AS blocks_id,
+        SYSDATE() AS inserted_timestamp,
+        SYSDATE() AS modified_timestamp,
+        '{{ invocation_id }}' AS _invocation_id
     FROM
         base_blocks
         LEFT JOIN validators_address_array

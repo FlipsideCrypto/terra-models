@@ -1,7 +1,8 @@
 {{ config(
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp"],
-    unique_key = "message_id"
+    unique_key = "message_id",
+    merge_exclude_columns = ["inserted_timestamp"]
 ) }}
 
 WITH txs AS (
@@ -218,7 +219,13 @@ final_table AS (
             message_index
         ) AS attributes,
         _ingested_at,
-        _inserted_timestamp
+        _inserted_timestamp,
+        {{ dbt_utils.generate_surrogate_key(
+            ['message_id']
+        ) }} AS messages_id,
+        SYSDATE() AS inserted_timestamp,
+        SYSDATE() AS modified_timestamp,
+        '{{ invocation_id }}' AS _invocation_id
     FROM
         distinct_events_table
 )
