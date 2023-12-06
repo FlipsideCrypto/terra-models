@@ -159,6 +159,12 @@ validators_address_array AS (
         _inserted_timestamp
 )
 SELECT
-    *
+    *,
+    {{ dbt_utils.generate_surrogate_key(
+        ['block_id']
+    ) }} AS blocks_val_id,
+    SYSDATE() AS inserted_timestamp,
+    SYSDATE() AS modified_timestamp,
+    '{{ invocation_id }}' AS _invocation_id
 FROM
     validators_address_array

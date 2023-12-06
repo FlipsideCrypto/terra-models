@@ -2,6 +2,7 @@
   materialized = 'incremental',
   unique_key = "_unique_key",
   incremental_strategy = 'merge',
+  merge_exclude_columns = ["inserted_timestamp"],
   cluster_by = ['block_timestamp::DATE','_inserted_timestamp::DATE'],
   post_hook = "ALTER TABLE {{ this }} ADD SEARCH OPTIMIZATION",
   tags = ['core']
@@ -35,7 +36,13 @@ SELECT
     tx_id,
     msg_index,
     attribute_index
-  ) AS _unique_key
+  ) AS _unique_key,
+  {{ dbt_utils.generate_surrogate_key(
+    ['_unique_key']
+  ) }} AS msg_attributes_2_id,
+  SYSDATE() AS inserted_timestamp,
+  SYSDATE() AS modified_timestamp,
+  '{{ invocation_id }}' AS _invocation_id
 FROM
   {{ ref('silver__msgs_2') }} A,
   LATERAL FLATTEN(

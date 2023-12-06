@@ -3,7 +3,8 @@
     unique_key = "SWAP_ID",
     incremental_strategy = "delete+insert",
     cluster_by = ["block_timestamp::DATE", "_inserted_timestamp::DATE"],
-    tags = ['noncore']
+    tags = ['noncore'],
+    enabled = false
 ) }}
 
 WITH all_swaps AS(

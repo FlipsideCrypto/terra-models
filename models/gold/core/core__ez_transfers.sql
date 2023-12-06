@@ -1,6 +1,6 @@
 {{ config(
     materialized = 'view',
-    secure = true
+    tags = ['core']
 ) }}
 
 SELECT
@@ -22,7 +22,21 @@ SELECT
     sender,
     receiver,
     'terra' blockchain,
-    transfer_type
+    transfer_type,
+    COALESCE (
+        transfers_id,
+        {{ dbt_utils.generate_surrogate_key(
+            ['tx_id', 'msg_index']
+        ) }}
+    ) AS ez_transfers_id,
+    COALESCE(
+        inserted_timestamp,
+        '2000-01-01'
+    ) AS inserted_timestamp,
+    COALESCE(
+        modified_timestamp,
+        '2000-01-01'
+    ) AS modified_timestamp
 FROM
     {{ ref('silver__transfers') }}
 UNION ALL
@@ -45,6 +59,20 @@ SELECT
     sender,
     receiver,
     'terra' blockchain,
-    transfer_type
+    transfer_type,
+    COALESCE (
+        transfers_ibc_id,
+        {{ dbt_utils.generate_surrogate_key(
+            ['tx_id', 'msg_index']
+        ) }}
+    ) AS ez_transfers_id,
+    COALESCE(
+        inserted_timestamp,
+        '2000-01-01'
+    ) AS inserted_timestamp,
+    COALESCE(
+        modified_timestamp,
+        '2000-01-01'
+    ) AS modified_timestamp
 FROM
     {{ ref('silver__transfers_ibc') }}

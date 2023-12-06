@@ -2,6 +2,7 @@
   materialized = 'incremental',
   unique_key = "_unique_key",
   incremental_strategy = 'merge',
+  merge_exclude_columns = ["inserted_timestamp"],
   cluster_by = ['block_timestamp::DATE','_inserted_timestamp::DATE'],
   post_hook = "ALTER TABLE {{ this }} ADD SEARCH OPTIMIZATION",
   tags = ['core']
@@ -160,7 +161,13 @@ SELECT
     '-',
     A.tx_id,
     A.msg_index
-  ) AS _unique_key
+  ) AS _unique_key,
+  {{ dbt_utils.generate_surrogate_key(
+    ['_unique_key']
+  ) }} AS msgs_2_id,
+  SYSDATE() AS inserted_timestamp,
+  SYSDATE() AS modified_timestamp,
+  '{{ invocation_id }}' AS _invocation_id
 FROM
   prefinal A
   LEFT JOIN grp b

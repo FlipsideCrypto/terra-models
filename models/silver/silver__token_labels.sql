@@ -2,6 +2,7 @@
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp::DATE"],
     unique_key = "address",
+    merge_exclude_columns = ["inserted_timestamp"],
     tags = ['noncore']
 ) }}
 
@@ -35,6 +36,12 @@ SELECT
     address,
     decimals,
     _ingested_at,
-    _inserted_timestamp
+    _inserted_timestamp,
+    {{ dbt_utils.generate_surrogate_key(
+        ['address']
+    ) }} AS token_labels_id,
+    SYSDATE() AS inserted_timestamp,
+    SYSDATE() AS modified_timestamp,
+    '{{ invocation_id }}' AS _invocation_id
 FROM
     token_labels

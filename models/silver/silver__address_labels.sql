@@ -1,6 +1,7 @@
 {{ config(
     materialized = 'incremental',
     unique_key = 'address',
+    merge_exclude_columns = ["inserted_timestamp"],
     tags = ['noncore']
 ) }}
 
@@ -80,7 +81,13 @@ FINAL AS (
         GREATEST(
             l._inserted_timestamp,
             t._inserted_timestamp
-        ) AS _inserted_timestamp
+        ) AS _inserted_timestamp,
+        {{ dbt_utils.generate_surrogate_key(
+            ['COALESCE( t.address, l.address )']
+        ) }} AS address_labels_id,
+        SYSDATE() AS inserted_timestamp,
+        SYSDATE() AS modified_timestamp,
+        '{{ invocation_id }}' AS _invocation_id
     FROM
         labels l full
         JOIN tokens t USING (
