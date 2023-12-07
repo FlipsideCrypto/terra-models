@@ -85,7 +85,7 @@ SELECT
             block_id :: INTEGER,
             '",true, "',
             id :: INT :: STRING,
-            '" ,"1000" ,"asc"],"id":"',
+            '" ,"100" ,"asc"],"id":"',
             block_id :: INT :: STRING,
             '"}'
         )
