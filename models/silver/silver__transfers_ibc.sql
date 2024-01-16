@@ -117,11 +117,19 @@ all_transfers AS (
         ) AS j,
         j :sender :: STRING AS sender,
         j :recipient :: STRING AS recipient,
-        j :amount :: STRING AS amount
+        j :amount :: STRING AS amount,
+        ROW_NUMBER() over(
+            PARTITION BY tx_id,
+            msg_group,
+            msg_sub_group
+            ORDER BY
+                msg_index
+        ) t_rank
     FROM
         base_atts
     WHERE
         msg_type = 'transfer'
+        AND msg_group IS NOT NULL
     GROUP BY
         block_id,
         block_timestamp,
@@ -159,7 +167,14 @@ ibc_out_transfers AS (
             A.attribute_value :: variant
         ) AS j,
         j :sender :: STRING AS sender,
-        j :receiver :: STRING AS receiver
+        j :receiver :: STRING AS receiver,
+        ROW_NUMBER() over(
+            PARTITION BY A.tx_id,
+            A.msg_group,
+            A.msg_sub_group
+            ORDER BY
+                A.msg_index
+        ) t_rank
     FROM
         base_atts A
         JOIN successful_sends b
@@ -236,6 +251,7 @@ new_fin AS (
         ON A.tx_id = b_out.tx_id
         AND A.msg_group = b_out.msg_group
         AND A.sender = b_out.sender
+        AND A.t_rank = b_out.t_rank
         LEFT JOIN ibc_in_transfers c_in
         ON A.tx_id = c_in.tx_id
         AND A.msg_group = c_in.msg_group
