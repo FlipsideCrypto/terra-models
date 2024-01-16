@@ -97,7 +97,9 @@ successful_sends AS (
         AND A.packet_src_channel = b.packet_src_channel
         AND A.packet_dst_channel = b.packet_dst_channel
     WHERE
-        A.msg_type = 'send_packet'
+        A.msg_type = 'send_packet' qualify(ROW_NUMBER() over(PARTITION BY A.tx_id, A.msg_group
+    ORDER BY
+        msg_group) = 1)
 ),
 all_transfers AS (
     SELECT
