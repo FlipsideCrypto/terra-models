@@ -16,7 +16,6 @@ models:
         
       - name: INITIAL_ACTION
         description: "Initial action for a transfer event"
-        tests:
       - name: CURRENT_ACTION
         description: "Current action for a transfer event"
         

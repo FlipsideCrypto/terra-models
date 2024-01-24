@@ -46,11 +46,16 @@ perms AS (
                 A.block_id,
                 A.tx_count
             FROM
-                {{ ref("silver__blocks") }} A
-                JOIN last_3_days b
-                ON A.block_id = b.block_id
+                {{ ref("silver__blocks") }} A {# JOIN last_3_days b
+                ON A.block_id = b.block_id #}
             WHERE
                 A.block_id > 4109598
+                AND A.block_id > (
+                    SELECT
+                        block_id
+                    FROM
+                        last_3_days
+                )
                 AND A.tx_count > 100
         ) A
         JOIN possible_perms

@@ -35,6 +35,7 @@ LATERAL FLATTEN(
 ) AS b
 WHERE
     1 = 1 {# key = 'block' #}
+    AND block_number = 8345886
 
 {% if is_incremental() %}
 AND {{ incremental_last_x_days(
@@ -97,18 +98,6 @@ silver_blocks AS (
         *
     FROM
         {{ ref('silver__blocks') }}
-
-{% if is_incremental() %}
-WHERE
-    _inserted_timestamp >= (
-        SELECT
-            MAX(
-                _inserted_timestamp :: DATE
-            ) -3
-        FROM
-            {{ this }}
-    )
-{% endif %}
 ),
 silver_txs AS (
     SELECT
