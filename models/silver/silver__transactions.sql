@@ -35,7 +35,7 @@ LATERAL FLATTEN(
 ) AS b
 WHERE
     1 = 1 {# key = 'block' #}
-    AND block_number = 8345886
+    {# AND block_number = 8345886 #}
 
 {% if is_incremental() %}
 AND {{ incremental_last_x_days(
