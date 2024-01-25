@@ -17,20 +17,21 @@ WITH last_3_days AS (
                 block_id DESC
         ) = 3
 ),
-observe_results AS (
-    SELECT
-        VALUE block_id
-    FROM
-        (
-            SELECT
-                top 1 *
-            FROM
-                {{ ref("silver_observability__transactions_completeness") }}
-            ORDER BY
-                test_timestamp DESC
-        ),
-        LATERAL FLATTEN(blocks_impacted_array)
+{# observe_results AS (
+SELECT
+    VALUE block_id
+FROM
+    (
+        SELECT
+            top 1 *
+        FROM
+            {{ ref("silver_observability__transactions_completeness") }}
+        ORDER BY
+            test_timestamp DESC
+    ),
+    LATERAL FLATTEN(blocks_impacted_array)
 ),
+#}
 gen AS (
     SELECT
         ROW_NUMBER() over (
@@ -71,20 +72,19 @@ perms AS (
                             block_id
                         FROM
                             last_3_days
-                    )
-                    OR A.block_id IN (
-                        SELECT
-                            block_id
-                        FROM
-                            observe_results
-                    )
-                )
-        ) A
-        JOIN possible_perms
-        ON CEIL(
-            tx_count,
-            -2
-        ) >= max_count
+                    ) {# OR A.block_id IN (
+                    SELECT
+                        block_id
+                    FROM
+                        observe_results
+                ) #}
+        )
+) A
+JOIN possible_perms
+ON CEIL(
+    tx_count,
+    -2
+) >= max_count
 ),
 blocks AS (
     SELECT
