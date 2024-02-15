@@ -120,8 +120,8 @@ all_transfers AS (
         j :amount :: STRING AS amount,
         ROW_NUMBER() over(
             PARTITION BY tx_id,
-            msg_group,
-            msg_sub_group
+            msg_group {# ,
+            msg_sub_group #}
             ORDER BY
                 msg_index
         ) t_rank
@@ -170,8 +170,8 @@ ibc_out_transfers AS (
         j :receiver :: STRING AS receiver,
         ROW_NUMBER() over(
             PARTITION BY A.tx_id,
-            A.msg_group,
-            A.msg_sub_group
+            A.msg_group {# ,
+            A.msg_sub_group #}
             ORDER BY
                 A.msg_index
         ) t_rank
