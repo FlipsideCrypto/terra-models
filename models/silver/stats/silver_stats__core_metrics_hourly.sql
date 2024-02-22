@@ -14,12 +14,12 @@ WITH msgs AS (
         attribute_key,
         attribute_value
     FROM
-        {{ ref('silver__msg_attributes') }}
+        {{ ref('silver__msg_attributes_2') }}
     WHERE
         attribute_key IN ('acc_seq', 'fee')
 
 {% if is_incremental() %}
-DATE_TRUNC(
+AND DATE_TRUNC(
     'hour',
     _inserted_timestamp
 ) >= (
@@ -74,11 +74,12 @@ SELECT
         'hour',
         block_timestamp
     ) AS block_timestamp_hour,
-    MIN(block_id) AS block_number_min,
+    {# MIN(block_id) AS block_number_min,
     MAX(block_id) AS block_number_max,
     COUNT(
         DISTINCT block_id
     ) AS block_count,
+    #}
     COUNT(
         DISTINCT A.tx_id
     ) AS transaction_count,
