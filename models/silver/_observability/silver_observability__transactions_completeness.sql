@@ -56,6 +56,7 @@ bronze AS (
             metadata :request :params [0],
             'tx.height='
         ) :: INT AS block_id_requested,
+        d.value :height :: INT AS height,
         b.block_timestamp,
         d.value :hash :: STRING AS tx_id,
         A._inserted_timestamp
@@ -68,41 +69,47 @@ bronze AS (
         JOIN LATERAL FLATTEN(
             input => A.data :result :txs
         ) AS d
+        LEFT JOIN rel_blocks e
+        ON d.value :height :: INT = e.block_id
     WHERE
         (
             b.block_id IS NOT NULL
             OR C.block_id IS NOT NULL
+            OR e.block_id IS NOT NULL
         )
 
 {% if is_incremental() %}
-AND A._inserted_timestamp >= CURRENT_DATE - 14
-OR {% if var('OBSERV_FULL_TEST') %}
-    1 = 1
-{% else %}
-    (
-        SELECT
-            MIN(VALUE) - 1
-        FROM
-            (
-                SELECT
-                    blocks_impacted_array
-                FROM
-                    {{ this }}
-                    qualify ROW_NUMBER() over (
-                        ORDER BY
-                            test_timestamp DESC
-                    ) = 1
-            ),
-            LATERAL FLATTEN(
-                input => blocks_impacted_array
-            )
-    ) IS NOT NULL
-{% endif %}
+AND (
+    A._inserted_timestamp >= CURRENT_DATE - 14
+    OR {% if var('OBSERV_FULL_TEST') %}
+        1 = 1
+    {% else %}
+        (
+            SELECT
+                MIN(VALUE) - 1
+            FROM
+                (
+                    SELECT
+                        blocks_impacted_array
+                    FROM
+                        {{ this }}
+                        qualify ROW_NUMBER() over (
+                            ORDER BY
+                                test_timestamp DESC
+                        ) = 1
+                ),
+                LATERAL FLATTEN(
+                    input => blocks_impacted_array
+                )
+        ) IS NOT NULL
+    {% endif %}
+)
 {% endif %}
 UNION ALL
 SELECT
     block_id,
     block_id AS block_id_requested,
+    block_id AS height,
     block_timestamp,
     tx_id,
     _inserted_timestamp
@@ -119,7 +126,7 @@ b_block AS (
     FROM
         bronze A qualify(ROW_NUMBER() over(PARTITION BY A.block_id, tx_id
     ORDER BY
-        A._inserted_timestamp DESC) = 1)
+        A.block_id DESC) = 1)
 ),
 b_block_req AS (
     SELECT
@@ -131,7 +138,19 @@ b_block_req AS (
     FROM
         bronze A qualify(ROW_NUMBER() over(PARTITION BY A.block_id_requested, tx_id
     ORDER BY
-        A._inserted_timestamp DESC) = 1)
+        A.block_id DESC) = 1)
+),
+b_block_height AS (
+    SELECT
+        A.block_id,
+        A.height,
+        A.block_timestamp,
+        A.tx_id,
+        A._inserted_timestamp
+    FROM
+        bronze A qualify(ROW_NUMBER() over(PARTITION BY A.height, tx_id
+    ORDER BY
+        A.block_id DESC) = 1)
 ),
 bronze_count AS (
     SELECT
@@ -162,6 +181,17 @@ bronze_count AS (
                 b_block_req A
             GROUP BY
                 block_id_requested
+            UNION ALL
+            SELECT
+                height AS block_id,
+                MIN(block_timestamp) AS block_timestamp,
+                COUNT(
+                    DISTINCT tx_id
+                ) AS num_txs
+            FROM
+                b_block_height A
+            GROUP BY
+                height
         )
     GROUP BY
         block_id,
