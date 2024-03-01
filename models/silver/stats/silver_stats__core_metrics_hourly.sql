@@ -5,9 +5,28 @@
     cluster_by = ['block_timestamp_hour::DATE'],
     tags = ['noncore']
 ) }}
+/* run incremental timestamp value first then use it as a static value */
+{% if execute %}
+
+{% if is_incremental() %}
+{% set query %}
+
+SELECT
+    MIN(DATE_TRUNC('hour', block_timestamp)) block_timestamp_hour
+FROM
+    {{ ref('silver__transactions') }}
+WHERE
+    _inserted_timestamp >= (
+        SELECT
+            MAX(_inserted_timestamp)
+        FROM
+            {{ this }}
+    ) {% endset %}
+    {% set min_block_timestamp_hour = run_query(query).columns [0].values() [0] %}
+{% endif %}
+{% endif %}
 
 WITH msgs AS (
-
     SELECT
         tx_id,
         msg_index,
@@ -21,13 +40,8 @@ WITH msgs AS (
 {% if is_incremental() %}
 AND DATE_TRUNC(
     'hour',
-    _inserted_timestamp
-) >= (
-    SELECT
-        MAX(DATE_TRUNC('hour', _inserted_timestamp)) - INTERVAL '12 hours'
-    FROM
-        {{ this }}
-)
+    block_timestamp
+) >= '{{ min_block_timestamp_hour }}'
 {% endif %}
 ),
 fee AS (
@@ -74,12 +88,6 @@ SELECT
         'hour',
         block_timestamp
     ) AS block_timestamp_hour,
-    {# MIN(block_id) AS block_number_min,
-    MAX(block_id) AS block_number_max,
-    COUNT(
-        DISTINCT block_id
-    ) AS block_count,
-    #}
     COUNT(
         DISTINCT A.tx_id
     ) AS transaction_count,
@@ -116,13 +124,8 @@ WHERE
 {% if is_incremental() %}
 AND DATE_TRUNC(
     'hour',
-    _inserted_timestamp
-) >= (
-    SELECT
-        MAX(DATE_TRUNC('hour', _inserted_timestamp)) - INTERVAL '12 hours'
-    FROM
-        {{ this }}
-)
+    block_timestamp
+) >= '{{ min_block_timestamp_hour }}'
 {% endif %}
 GROUP BY
     1
