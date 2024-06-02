@@ -47,6 +47,10 @@ ALTER USER AWS_LAMBDA_TERRA_API_SBX SET ROLE AWS_LAMBDA_TERRA_API_SBX;
 
 -- Note that the password must meet Snowflake's password requirements, which include a minimum length of 8 characters, at least one uppercase letter, at least one lowercase letter, and at least one number or special character.
 ALTER USER AWS_LAMBDA_TERRA_API SET PASSWORD = 'new_password';
+
+GRANT USAGE ON DATABASE TERRA_DEV TO ROLE AWS_LAMBDA_TERRA_API;
+GRANT USAGE ON WAREHOUSE DBT_CLOUD_TERRA TO ROLE AWS_LAMBDA_TERRA_API;
+GRANT SELECT ON VIEW streamline.pc_getBlock_realtime TO ROLE AWS_LAMBDA_TERRA_API;
 ```
 ### Register Snowflake integration and UDF's
 
@@ -85,5 +89,5 @@ GRANT USAGE ON DATABASE TERRA_DEV TO ROLE AWS_LAMBDA_TERRA_API;
 ```
 
 ```zsh
-dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True, "STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES": True}' -m 1+models/silver/streamline/core/realtime/streamline__pc_getBlock_realtime.sql --profile terra --target sbx --profiles-dir ~/.dbt
+dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True, "STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES": True}' -m 1+models/silver/streamline/realtime/streamline__pc_getBlock_realtime.sql --profile terra --target sbx --profiles-dir ~/.dbt
 ```
