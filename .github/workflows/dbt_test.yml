@@ -45,4 +45,4 @@ jobs:
           dbt deps
       - name: Run DBT Jobs
         run: |
-          dbt test -m models/gold --exclude tag:classic
+          dbt test -m "terra_models,models/gold" --exclude tag:classic
