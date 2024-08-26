@@ -1,5 +1,5 @@
 {{ config (
-    materialized = "ephemeral",
+    materialized = "view",
     unique_key = "block_id",
 ) }}
 

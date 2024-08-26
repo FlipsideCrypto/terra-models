@@ -11,7 +11,7 @@ WITH last_3_days AS (
     SELECT
         block_id
     FROM
-        {{ ref("_max_block_by_date") }}
+        {{ ref("streamline___max_block_by_date") }}
         qualify ROW_NUMBER() over (
             ORDER BY
                 block_id DESC
