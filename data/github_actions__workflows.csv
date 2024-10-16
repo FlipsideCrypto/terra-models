@@ -1,6 +1,6 @@
 workflow_name,workflow_schedule
-dbt_run_observability,"15 0,4,8,12,17,20 * * *"
-dbt_run_scheduled_core,"3,33 * * * *"
-dbt_run_scheduled_non_core,"42 * * * *"
-dbt_run_streamline,"22,52 * * * *"
-dbt_test_tasks,"10,40 * * * *"
+dbt_run_observability,"15 4 * * *"
+dbt_run_scheduled_core,"3 4 * * *"
+dbt_run_scheduled_non_core,"42 4 * * *"
+dbt_run_streamline,"3 */2 * * *"
+dbt_test_tasks,"10 */12 * * *"
