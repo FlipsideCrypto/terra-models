@@ -3,15 +3,17 @@
     tags = ['streamline_view']
 ) }}
 
-
-{% if execute %}
-{% set height = run_query('SELECT streamline.udf_get_chainhead()') %}
-{% set block_height = height.columns[0].values()[0] %}
-{% else %}
-{% set block_height = 0 %}
-{% endif %}
-
 SELECT
-    height as block_id
+    _id AS block_number
 FROM
-    TABLE(streamline.udtf_get_base_table({{block_height}}))
+    {{ source(
+        'crosschain_silver',
+        'number_sequence'
+    ) }}
+WHERE
+    _id <= (
+        SELECT
+            MAX(block_number)
+        FROM
+            {{ ref('streamline__chainhead') }}
+    )
