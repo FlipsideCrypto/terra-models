@@ -24,4 +24,4 @@ SELECT
             []
         ),
         'Vault/prod/terra/mainnet/publicnode'
-    ) :data :result :sync_info :latest_block_height :: INT - 500 AS block_number
+    ) :data :result :sync_info :latest_block_height :: INT - 500 AS block_id
